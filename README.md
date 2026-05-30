@@ -60,6 +60,10 @@ Repository setup and project planning phase.
 * Implement forecasting and decision-support capabilities
 * Create a professional ERP portfolio project
 
+Future Research
+
+This project serves as the foundation for future research in ERP-enabled business analytics, forecasting, process optimization, and operational intelligence within the hospitality industry.
+
 ## Author
 
 Ashek Alahi
