@@ -1,0 +1,3 @@
+model,holdout_months,mape_pct,mae
+Revenue linear trend baseline,2,26.11,106833.64
+Cash collection 3-month moving average,0,n/a,n/a
