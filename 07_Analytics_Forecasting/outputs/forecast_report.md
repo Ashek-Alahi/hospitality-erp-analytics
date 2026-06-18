@@ -2,6 +2,9 @@
 
 Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype.
 
+## Baseline forecasting approach
+This report uses simple baseline methods for portfolio demonstration: a linear revenue trend baseline and a 3-month moving average for cash collections. It is not a production-grade predictive model and should not be used for operational commitments without a longer history, external demand drivers, and formal model monitoring.
+
 ## Revenue forecast
 | period | net_revenue | forecast_revenue | absolute_error |
 | --- | --- | --- | --- |
@@ -13,6 +16,8 @@ Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype.
 | 2025-12 | 430348.27 | 236232.19 | 194116.08 |
 
 ## Evaluation metrics
+MAPE (Mean Absolute Percentage Error) shows average absolute forecast error as a percentage of actual revenue for the holdout months. MAE (Mean Absolute Error) shows the average absolute currency-unit error. Because the dataset is synthetic and short, these metrics are directional only and should not be interpreted as proof of reliable future accuracy.
+
 | model | holdout_months | mape_pct | mae |
 | --- | --- | --- | --- |
 | Revenue linear trend baseline | 2 | 26.11 | 106833.64 |

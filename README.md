@@ -80,7 +80,7 @@ Use **Get Data > Text/CSV** in Power BI to connect to files in `02_Data/processe
 
 ## Data and Confidentiality Statement
 
-All records are synthetic/anonymized sample data created for portfolio demonstration. The project does not include private company data, confidential operational data, or a claim of real SAP S/4HANA implementation.
+All records are synthetic/anonymized sample data created for portfolio demonstration. The project does not include non-public operational data, confidential records, or a claim that this is an SAP S/4HANA implementation.
 
 ## Author
 

@@ -3,6 +3,8 @@ import csv
 from datetime import datetime
 from collections import defaultdict
 
+from scripts.validate_data import validate_data
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "02_Data" / "processed"
 
@@ -38,6 +40,7 @@ def report(path,title,sections):
 
 
 def main():
+    validate_data()
     sales=read_csv('sales_revenue_clean.csv'); invoices=read_csv('customer_invoices_clean.csv'); payments=read_csv('customer_payments_clean.csv'); costs=read_csv('cost_center_budget_actual_clean.csv'); procure=read_csv('procurement_vendor_clean.csv'); inventory=read_csv('inventory_movements_clean.csv'); customers={r['customer_id']:r for r in read_csv('customers_clean.csv')}; vendors={r['vendor_id']:r for r in read_csv('vendors_clean.csv')}
     pay_by_inv=defaultdict(float)
     for p in payments: pay_by_inv[p['invoice_id']]+=float(p['payment_amount'])
@@ -78,7 +81,7 @@ def main():
     cash=[]; vals=[r['payment_amount'] for r in collections]
     for i,r in enumerate(collections): cash.append({'period':r['period'],'payment_amount':r['payment_amount'],'forecast_cash_collection':round(sum(vals[max(0,i-3):i] or [vals[0]])/len(vals[max(0,i-3):i] or [vals[0]]),2)})
     metrics=[{'model':'Revenue linear trend baseline','holdout_months':2,'mape_pct':mape,'mae':round(sum(h['absolute_error'] for h in hold)/2,2)},{'model':'Cash collection 3-month moving average','holdout_months':0,'mape_pct':'n/a','mae':'n/a'}]
-    write_csv(ROOT/'07_Analytics_Forecasting/outputs/revenue_forecast.csv',forecast); write_csv(ROOT/'07_Analytics_Forecasting/outputs/cash_flow_forecast.csv',cash); write_csv(ROOT/'07_Analytics_Forecasting/outputs/forecast_metrics.csv',metrics); svg_bar(ROOT/'07_Analytics_Forecasting/outputs/revenue_forecast.svg','Revenue Forecast Baseline',[r['period'] for r in forecast],[r['forecast_revenue'] for r in forecast]); report(ROOT/'07_Analytics_Forecasting/outputs/forecast_report.md','Analytics and Forecasting Report',[('Revenue forecast',md_table(forecast[-6:])),('Evaluation metrics',md_table(metrics)),('Cash-flow forecast',md_table(cash[-6:]))])
+    write_csv(ROOT/'07_Analytics_Forecasting/outputs/revenue_forecast.csv',forecast); write_csv(ROOT/'07_Analytics_Forecasting/outputs/cash_flow_forecast.csv',cash); write_csv(ROOT/'07_Analytics_Forecasting/outputs/forecast_metrics.csv',metrics); svg_bar(ROOT/'07_Analytics_Forecasting/outputs/revenue_forecast.svg','Revenue Forecast Baseline',[r['period'] for r in forecast],[r['forecast_revenue'] for r in forecast]); report(ROOT/'07_Analytics_Forecasting/outputs/forecast_report.md','Analytics and Forecasting Report',[('Baseline forecasting approach','This report uses simple baseline methods for portfolio demonstration: a linear revenue trend baseline and a 3-month moving average for cash collections. It is not a production-grade predictive model and should not be used for operational commitments without a longer history, external demand drivers, and formal model monitoring.'),('Revenue forecast',md_table(forecast[-6:])),('Evaluation metrics','MAPE (Mean Absolute Percentage Error) shows average absolute forecast error as a percentage of actual revenue for the holdout months. MAE (Mean Absolute Error) shows the average absolute currency-unit error. Because the dataset is synthetic and short, these metrics are directional only and should not be interpreted as proof of reliable future accuracy.\n\n'+md_table(metrics)),('Cash-flow forecast',md_table(cash[-6:]))])
     kpis=[{'kpi':'Total net revenue','value':round(total_rev,2)},{'kpi':'Open AR balance','value':round(sum(r['outstanding_balance'] for r in ar),2)},{'kpi':'Operating profit','value':round(total_rev-total_cost,2)},{'kpi':'Purchase spend','value':round(sum(float(p['purchase_amount']) for p in procure),2)},{'kpi':'Reorder alerts','value':len(reorder)}]
     write_csv(ROOT/'09_Documentation/kpi_summary.csv',kpis); (ROOT/'09_Documentation/kpi_summary.md').write_text('# KPI Summary\n\n'+md_table(kpis)+'\n', encoding='utf-8')
     html="<!doctype html><html><head><meta charset='utf-8'><title>Hospitality ERP Analytics Dashboard</title><style>body{font-family:Arial;margin:32px;color:#1f2937}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{border:1px solid #ddd;border-radius:8px;padding:16px}iframe{width:100%;height:430px;border:0}</style></head><body><h1>Hospitality ERP Analytics Dashboard</h1><p>Synthetic SAP S/4HANA-inspired prototype. All visuals are text-based SVG files.</p><div class='grid'>" + ''.join(f"<div class='card'><strong>{r['kpi']}</strong><br>{r['value']}</div>" for r in kpis) + "</div><h2>Charts</h2><iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe><iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe><iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe></body></html>"

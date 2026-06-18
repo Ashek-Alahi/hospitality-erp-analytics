@@ -1,11 +1,26 @@
 # BI Integration
 
-The dashboard layer is text-based and GitHub-reviewable.
+## Business purpose
+This folder turns module outputs into an executive dashboard entry point that can be opened locally or reviewed as text in GitHub.
 
-- HTML dashboard: `08_BI_Integration/dashboard/index.html`
-- Source KPI output: `09_Documentation/kpi_summary.csv`
-- Chart files: SVG outputs under each module's `outputs/` folder
+## Input files used
+- `09_Documentation/kpi_summary.csv`
+- SVG charts from FI, CO, SD, MM, and forecasting output folders
+- Module CSV outputs for optional BI tool connection
 
-## Power BI Guidance
+## Analysis performed
+The dashboard does not perform new calculations. It presents regenerated KPI values and embeds text-based SVG visuals produced by the Python pipeline.
 
-Power BI can connect directly to the CSV files in `02_Data/processed/` and output CSV files in each module folder. Use **Get Data > Text/CSV**, load the files, then create relationships using customer, vendor, period, and date fields. This repository intentionally does not include a `.pbix` file because binary report files are outside the project rules.
+## Output files generated
+- `08_BI_Integration/dashboard/index.html`
+
+## ERP/SAP relevance
+The dashboard represents an ERP analytics consumption layer: finance, sales, controlling, and procurement KPIs are summarized for management review.
+
+## Management decisions supported
+- Review cross-module KPIs in one place.
+- Use CSV outputs as a starting point for Power BI, Tableau, Excel Power Query, or SQLite exploration.
+- Discuss how ERP transaction data becomes an executive reporting layer.
+
+## Power BI guidance
+Use **Get Data > Text/CSV** to connect to files in `02_Data/processed/` and module `outputs/` folders. Create relationships using customer, vendor, period, and date fields. This repository intentionally does not include a `.pbix` file because binary report files are outside the project rules.
