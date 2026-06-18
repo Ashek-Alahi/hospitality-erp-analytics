@@ -1,29 +1,31 @@
-# MM Module — Procurement and Inventory Analytics
+# MM Module Overview
 
 ## Business purpose
-This module provides a procurement and stock-control view for hospitality operations, where vendor reliability and inventory availability affect service continuity.
+Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
 
-## Input files used
-- `02_Data/processed/procurement_vendor_clean.csv`
-- `02_Data/processed/vendors_clean.csv`
-- `02_Data/processed/inventory_movements_clean.csv`
+## Business problem
+Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
 
-## Analysis performed
-- Purchase spend by procurement category.
-- Vendor spend and average delivery delay.
-- Reorder alerts where closing stock is at or below reorder point.
+## Input files
+Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
 
-## Output files generated
-- `06_MM_Module/outputs/mm_report.md`
-- `06_MM_Module/outputs/purchase_spend.csv`
-- `06_MM_Module/outputs/vendor_performance.csv`
-- `06_MM_Module/outputs/reorder_alerts.csv`
-- `06_MM_Module/outputs/purchase_spend.svg`
+## Analysis logic
+The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+
+## KPIs generated
+See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
+
+## Output files
+Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
 
 ## ERP/SAP relevance
-The module is inspired by SAP MM processes such as purchasing, vendor master data, goods receipt timing, and inventory monitoring.
+The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
 
 ## Management decisions supported
-- Negotiate with vendors based on spend and delivery performance.
-- Prioritize replenishment for items below reorder threshold.
-- Review procurement category exposure and supply risk.
+The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+
+## Limitations
+Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
+
+## Interview explanation
+Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.

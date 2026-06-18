@@ -1,27 +1,31 @@
-# CO Module — Controlling and Profitability Analytics
+# CO Module Overview
 
 ## Business purpose
-This module shows how hospitality managers can monitor cost center spending against budget and connect operating cost to profitability.
+Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
 
-## Input files used
-- `02_Data/processed/cost_center_budget_actual_clean.csv`
-- `02_Data/processed/sales_revenue_clean.csv`
+## Business problem
+Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
 
-## Analysis performed
-- Budget versus actual cost by cost center.
-- Variance calculation for each cost center.
-- Total net revenue, operating cost, and operating profit summary.
+## Input files
+Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
 
-## Output files generated
-- `04_CO_Module/outputs/co_report.md`
-- `04_CO_Module/outputs/cost_center_variance.csv`
-- `04_CO_Module/outputs/profitability_summary.csv`
-- `04_CO_Module/outputs/cost_center_actuals.svg`
+## Analysis logic
+The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+
+## KPIs generated
+See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
+
+## Output files
+Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
 
 ## ERP/SAP relevance
-The module is inspired by SAP CO cost center accounting and profitability review. It demonstrates how budgeted and actual cost records can support monthly control activities.
+The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
 
 ## Management decisions supported
-- Identify departments requiring cost-control action.
-- Review whether revenue levels cover operating cost.
-- Support budget discussions using variance evidence.
+The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+
+## Limitations
+Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
+
+## Interview explanation
+Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.

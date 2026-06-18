@@ -1,27 +1,5 @@
-# Final Executive Summary
+# Executive Action Register
 
-Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
-
-## Portfolio positioning
-A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic synthetic data, Python, SQL-ready CSVs, Markdown reporting, SVG charts, and an HTML dashboard.
-
-## Most important findings
-| kpi | value |
-| --- | --- |
-| Total net revenue | 12867010.04 |
-| Occupancy rate pct | 86.45 |
-| ADR | 126.0 |
-| RevPAR | 108.93 |
-| Collection rate pct | 82.38 |
-| Open AR balance | 1705443.94 |
-| Operating profit | 7327642.68 |
-| Operating profit margin pct | 56.95 |
-| Purchase spend | 1185479.52 |
-| Vendor delay rate pct | 49.17 |
-| Reorder alerts | 113 |
-| Best forecast baseline | linear trend forecast |
-
-## Recommended actions
 | action_id | module | issue | evidence | priority | recommended_action | owner_role | expected_business_value |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | ACT-001 | FI | Overdue receivables | Open AR balance 1,705,443.94 | High | Prioritize 90+ and 61-90 day receivables for collection follow-up. | Finance / Credit Control | Improve cash conversion and reduce write-off exposure. |
@@ -30,6 +8,3 @@ A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic s
 | ACT-004 | CO | Unfavorable cost center variance | Food & Beverage variance 4.59% | Medium | Review spending drivers and update department action plans. | Department Manager / Controller | Improve budget accountability without reducing service quality. |
 | ACT-005 | SD | Revenue concentration by channel | Top channel is Direct at 4,137,754.59 | Medium | Review direct booking, negotiated account, and OTA channel mix. | Revenue Manager | Reduce margin pressure and strengthen commercial resilience. |
 | ACT-006 | Forecasting | Weak forecast reliability | Best baseline linear trend forecast MAPE 9.74% | Medium | Use baseline forecasts as planning signals and investigate large variances before commitments. | FP&A / Revenue Management | Improve short-term planning discipline while avoiding overconfidence. |
-
-## Limitations
-Synthetic/anonymized data only; not a real SAP S/4HANA implementation and not production forecasting.

@@ -1,31 +1,24 @@
 <!doctype html>
 <html>
-<head>
-  <meta charset='utf-8'>
-  <title>Hospitality ERP Analytics Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 28px; color: #111827; background: #f8fafc; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
-    .card { background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 15px; }
-    .card span { display: block; color: #4b5563; font-size: 13px; }
-    .card strong { font-size: 23px; }
-    iframe { width: 100%; height: 430px; border: 1px solid #e5e7eb; background: white; border-radius: 10px; margin: 10px 0; }
-    a { color: #2563eb; }
-  </style>
-</head>
+<head><meta charset='utf-8'><title>Hospitality ERP Analytics Dashboard</title><style>
+body { font-family: Arial, sans-serif; margin: 28px; color: #111827; background: #f8fafc; line-height: 1.45; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+.card, .panel { background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 15px; margin-bottom: 18px; }
+.card span { display: block; color: #4b5563; font-size: 13px; } .card strong { font-size: 23px; }
+iframe { width: 100%; height: 430px; border: 1px solid #e5e7eb; background: white; border-radius: 10px; margin: 10px 0; }
+a { color: #2563eb; } table { border-collapse: collapse; width: 100%; background: white; } th, td { border: 1px solid #d1d5db; padding: 8px; text-align: left; } th { background: #e5e7eb; }
+.note { background: #fff7ed; border-left: 5px solid #f97316; padding: 12px; }
+</style></head>
 <body>
-  <h1>Hospitality ERP Analytics Dashboard</h1>
-  <p>SAP S/4HANA-inspired prototype using deterministic synthetic/anonymized data only. Charts are SVG/text-based; no screenshots or binary BI files are generated.</p>
-  <section class='grid'>
-    <div class='card'><span>Total net revenue</span><strong>$12,867,010.04</strong></div><div class='card'><span>Occupancy rate pct</span><strong>86.45%</strong></div><div class='card'><span>ADR</span><strong>$126.00</strong></div><div class='card'><span>RevPAR</span><strong>$108.93</strong></div><div class='card'><span>Collection rate pct</span><strong>82.38%</strong></div><div class='card'><span>Open AR balance</span><strong>$1,705,443.94</strong></div><div class='card'><span>Operating profit</span><strong>$7,327,642.68</strong></div><div class='card'><span>Operating profit margin pct</span><strong>56.95%</strong></div><div class='card'><span>Purchase spend</span><strong>$1,185,479.52</strong></div><div class='card'><span>Vendor delay rate pct</span><strong>49.17%</strong></div><div class='card'><span>Reorder alerts</span><strong>113</strong></div><div class='card'><span>Best forecast baseline</span><strong>linear trend forecast</strong></div>
-  </section>
-  <h2>Module charts</h2>
-  <iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe>
-  <iframe src='../../04_CO_Module/outputs/cost_center_actuals.svg'></iframe>
-  <iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe>
-  <iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe>
-  <iframe src='../../07_Analytics_Forecasting/outputs/revenue_forecast.svg'></iframe>
-  <h2>Reports</h2>
-  <ul><li><a href='../../03_FI_Module/outputs/fi_report.md'>FI report</a></li><li><a href='../../04_CO_Module/outputs/co_report.md'>CO report</a></li><li><a href='../../05_SD_Module/outputs/sd_report.md'>SD report</a></li><li><a href='../../06_MM_Module/outputs/mm_report.md'>MM report</a></li><li><a href='../../07_Analytics_Forecasting/outputs/forecast_report.md'>Forecast report</a></li><li><a href='../../09_Documentation/final_project_report.md'>Final report</a></li></ul>
-</body>
-</html>
+<h1>Hospitality ERP Analytics Dashboard</h1>
+<div class='note'><strong>Scope note:</strong> SAP S/4HANA-inspired prototype using deterministic synthetic data only. This is not a real SAP S/4HANA implementation, does not connect to a live ERP system, and does not use confidential company data.</div>
+<section class='panel'><h2>Executive summary</h2><p>This dashboard connects FI, CO, SD, MM, and forecasting outputs so hotel leaders can review revenue performance, cash collection, cost accountability, procurement reliability, inventory risk, and short-term planning signals from one static HTML page.</p></section>
+<section><h2>FI KPIs</h2><p>Revenue, collection, and receivables indicators show whether sales are converting into cash.</p><div class='grid'><div class='card'><span>Total net revenue</span><strong>$12,867,010.04</strong></div><div class='card'><span>Collection rate pct</span><strong>82.38%</strong></div><div class='card'><span>Open AR balance</span><strong>$1,705,443.94</strong></div></div></section>
+<section><h2>CO KPIs</h2><p>Controlling indicators connect revenue performance to departmental cost accountability.</p><div class='grid'><div class='card'><span>Operating profit</span><strong>$7,327,642.68</strong></div><div class='card'><span>Operating profit margin pct</span><strong>56.95%</strong></div></div></section>
+<section><h2>SD KPIs</h2><p>Commercial KPIs show hotel demand, pricing, room productivity, channels, and segments.</p><div class='grid'><div class='card'><span>Occupancy rate pct</span><strong>86.45%</strong></div><div class='card'><span>ADR</span><strong>$126.00</strong></div><div class='card'><span>RevPAR</span><strong>$108.93</strong></div></div></section>
+<section><h2>MM KPIs</h2><p>Procurement and inventory KPIs highlight supplier reliability and service-level risk.</p><div class='grid'><div class='card'><span>Purchase spend</span><strong>$1,185,479.52</strong></div><div class='card'><span>Vendor delay rate pct</span><strong>49.17%</strong></div><div class='card'><span>Reorder alerts</span><strong>113</strong></div></div></section>
+<section><h2>Forecasting KPIs</h2><p>Baseline forecasts provide simple planning references, not production-grade predictions.</p><div class='grid'><div class='card'><span>Best forecast baseline</span><strong>linear trend forecast</strong></div></div></section>
+<section><h2>Management action required</h2><table><thead><tr><th>ID</th><th>Module</th><th>Issue</th><th>Priority</th><th>Recommended action</th></tr></thead><tbody><tr><td>ACT-001</td><td>FI</td><td>Overdue receivables</td><td>High</td><td>Prioritize 90+ and 61-90 day receivables for collection follow-up.</td></tr><tr><td>ACT-002</td><td>MM</td><td>High vendor delay rate</td><td>High</td><td>Review service levels, expedite open items, and identify alternate suppliers for critical categories.</td></tr><tr><td>ACT-003</td><td>MM</td><td>Inventory item below reorder point</td><td>High</td><td>Replenish below-threshold items and confirm reorder points for seasonal demand.</td></tr><tr><td>ACT-004</td><td>CO</td><td>Unfavorable cost center variance</td><td>Medium</td><td>Review spending drivers and update department action plans.</td></tr><tr><td>ACT-005</td><td>SD</td><td>Revenue concentration by channel</td><td>Medium</td><td>Review direct booking, negotiated account, and OTA channel mix.</td></tr><tr><td>ACT-006</td><td>Forecasting</td><td>Weak forecast reliability</td><td>Medium</td><td>Use baseline forecasts as planning signals and investigate large variances before commitments.</td></tr></tbody></table></section>
+<h2>Module charts</h2><iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe><iframe src='../../04_CO_Module/outputs/cost_center_actuals.svg'></iframe><iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe><iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe><iframe src='../../07_Analytics_Forecasting/outputs/revenue_forecast.svg'></iframe>
+<h2>Reports and review links</h2><ul><li><a href='../../03_FI_Module/outputs/fi_report.md'>FI report</a></li><li><a href='../../04_CO_Module/outputs/co_report.md'>CO report</a></li><li><a href='../../05_SD_Module/outputs/sd_report.md'>SD report</a></li><li><a href='../../06_MM_Module/outputs/mm_report.md'>MM report</a></li><li><a href='../../07_Analytics_Forecasting/outputs/forecast_report.md'>Forecast report</a></li><li><a href='../../09_Documentation/executive_action_register.md'>Executive action register</a></li><li><a href='../../09_Documentation/final_project_report.md'>Final report</a></li></ul>
+</body></html>
