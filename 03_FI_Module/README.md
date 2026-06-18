@@ -1,29 +1,31 @@
-# FI Module — Financial Accounting Analytics
+# FI Module Overview
 
 ## Business purpose
-This module translates synthetic hospitality receivables, payment, and revenue data into a finance view of cash collection and open customer balances.
+Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
 
-## Input files used
-- `02_Data/processed/sales_revenue_clean.csv`
-- `02_Data/processed/customer_invoices_clean.csv`
-- `02_Data/processed/customer_payments_clean.csv`
+## Business problem
+Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
 
-## Analysis performed
-- Monthly net revenue trend analysis.
-- Accounts receivable aging by overdue bucket.
-- Monthly customer cash collection summary.
+## Input files
+Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
 
-## Output files generated
-- `03_FI_Module/outputs/fi_report.md`
-- `03_FI_Module/outputs/ar_aging.csv`
-- `03_FI_Module/outputs/revenue_trend.csv`
-- `03_FI_Module/outputs/cash_collections.csv`
-- `03_FI_Module/outputs/revenue_trend.svg`
+## Analysis logic
+The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+
+## KPIs generated
+See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
+
+## Output files
+Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
 
 ## ERP/SAP relevance
-The module is inspired by SAP FI reporting concepts such as customer invoices, incoming payments, receivables aging, and finance period reporting. It does not represent a real SAP configuration.
+The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
 
 ## Management decisions supported
-- Prioritize collection follow-up for older receivable buckets.
-- Compare revenue activity with actual cash receipts.
-- Discuss working-capital pressure in finance review meetings.
+The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+
+## Limitations
+Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
+
+## Interview explanation
+Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.

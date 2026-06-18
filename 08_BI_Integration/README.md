@@ -1,26 +1,31 @@
-# BI Integration
+# BI Integration Overview
 
 ## Business purpose
-This folder turns module outputs into an executive dashboard entry point that can be opened locally or reviewed as text in GitHub.
+Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
 
-## Input files used
-- `09_Documentation/kpi_summary.csv`
-- SVG charts from FI, CO, SD, MM, and forecasting output folders
-- Module CSV outputs for optional BI tool connection
+## Business problem
+Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
 
-## Analysis performed
-The dashboard does not perform new calculations. It presents regenerated KPI values and embeds text-based SVG visuals produced by the Python pipeline.
+## Input files
+Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
 
-## Output files generated
-- `08_BI_Integration/dashboard/index.html`
+## Analysis logic
+The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+
+## KPIs generated
+See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
+
+## Output files
+Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
 
 ## ERP/SAP relevance
-The dashboard represents an ERP analytics consumption layer: finance, sales, controlling, and procurement KPIs are summarized for management review.
+The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
 
 ## Management decisions supported
-- Review cross-module KPIs in one place.
-- Use CSV outputs as a starting point for Power BI, Tableau, Excel Power Query, or SQLite exploration.
-- Discuss how ERP transaction data becomes an executive reporting layer.
+The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
 
-## Power BI guidance
-Use **Get Data > Text/CSV** to connect to files in `02_Data/processed/` and module `outputs/` folders. Create relationships using customer, vendor, period, and date fields. This repository intentionally does not include a `.pbix` file because binary report files are outside the project rules.
+## Limitations
+Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
+
+## Interview explanation
+Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.

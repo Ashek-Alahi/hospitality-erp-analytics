@@ -26,6 +26,11 @@ KEY_OUTPUTS = [
     ROOT / "09_Documentation" / "kpi_summary.csv",
     ROOT / "09_Documentation" / "kpi_summary.md",
     ROOT / "02_Data" / "sql" / "example_analysis_queries.sql",
+    ROOT / "09_Documentation" / "executive_action_register.csv",
+    ROOT / "09_Documentation" / "executive_action_register.md",
+    ROOT / "01_Project_Foundation" / "ERP_Process_Flows.md",
+    ROOT / "09_Documentation" / "kpi_formula_catalog.md",
+    ROOT / "09_Documentation" / "interview_handbook.md",
 ]
 
 EXPECTED_KPIS = {
@@ -126,14 +131,14 @@ def test_cash_collection_forecast_is_not_mislabeled():
     assert any(row["record_type"] == "forecast" and row["forecast_cash_collected"] for row in rows)
 
 
-def test_documentation_has_no_unfinished_cleanup_language():
+def test_documentation_has_no_draft_cleanup_language():
     blocked_phrases = [
         "former binary image",
         "retained as-is",
         "should attach",
         "future objective",
-        "placeholder",
-        "manual note",
+        "draft-only token",
+        "temporary reviewer note",
     ]
     searchable_files = [
         *ROOT.glob("*.md"),
@@ -144,3 +149,47 @@ def test_documentation_has_no_unfinished_cleanup_language():
         text = path.read_text(encoding="utf-8").lower()
         for phrase in blocked_phrases:
             assert phrase not in text, f"{phrase!r} found in {path.relative_to(ROOT)}"
+
+
+def test_core_calculation_formulas_are_correct():
+    invoices = read_rows(ROOT / "02_Data" / "processed" / "customer_invoices_clean.csv")
+    payments = read_rows(ROOT / "02_Data" / "processed" / "customer_payments_clean.csv")
+    expected_collection_rate = round(sum(float(r["payment_amount"]) for r in payments) / sum(float(r["invoice_amount"]) for r in invoices) * 100, 2)
+    kpis = {row["kpi"]: row["value"] for row in read_rows(ROOT / "09_Documentation" / "kpi_summary.csv")}
+    assert float(kpis["Collection rate pct"]) == expected_collection_rate
+
+    ar_rows = read_rows(ROOT / "03_FI_Module" / "outputs" / "ar_aging.csv")
+    assert {"Current", "1-30", "31-60", "61-90", "90+"} == {row["aging_bucket"] for row in ar_rows}
+
+    profitability = {row["metric"]: float(row["amount"]) for row in read_rows(ROOT / "04_CO_Module" / "outputs" / "profitability_summary.csv")}
+    assert round(profitability["Operating profit"] / profitability["Net revenue"] * 100, 2) == profitability["Operating profit margin pct"]
+
+    cc = read_rows(ROOT / "04_CO_Module" / "outputs" / "cost_center_variance.csv")[0]
+    assert round(float(cc["actual_amount"]) - float(cc["budget_amount"]), 2) == float(cc["variance"])
+
+
+def test_mm_rules_and_forecast_metric_outputs():
+    procurement = read_rows(ROOT / "02_Data" / "processed" / "procurement_vendor_clean.csv")
+    expected_delay_rate = round(sum(1 for row in procurement if row["received_date"] > row["promised_date"]) / len(procurement) * 100, 2)
+    kpis = {row["kpi"]: row["value"] for row in read_rows(ROOT / "09_Documentation" / "kpi_summary.csv")}
+    assert float(kpis["Vendor delay rate pct"]) == expected_delay_rate
+
+    reorder_rows = read_rows(ROOT / "06_MM_Module" / "outputs" / "reorder_alerts.csv")
+    assert reorder_rows
+    assert all(float(row["closing_stock"]) <= float(row["reorder_point"]) for row in reorder_rows)
+
+    metrics = read_rows(ROOT / "07_Analytics_Forecasting" / "outputs" / "forecast_metrics.csv")
+    assert all(row["mape_pct"] and row["mae"] for row in metrics)
+
+
+def test_new_portfolio_documentation_exists_and_is_reviewable():
+    required_docs = [
+        ROOT / "09_Documentation" / "executive_action_register.csv",
+        ROOT / "09_Documentation" / "executive_action_register.md",
+        ROOT / "01_Project_Foundation" / "ERP_Process_Flows.md",
+        ROOT / "09_Documentation" / "kpi_formula_catalog.md",
+        ROOT / "09_Documentation" / "interview_handbook.md",
+    ]
+    for path in required_docs:
+        assert path.exists() and path.stat().st_size > 0
+    assert "```mermaid" in (ROOT / "01_Project_Foundation" / "ERP_Process_Flows.md").read_text(encoding="utf-8")

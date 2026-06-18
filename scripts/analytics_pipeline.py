@@ -7,6 +7,9 @@ from pathlib import Path
 
 from scripts.generate_synthetic_data import ROOMS_AVAILABLE, generate_data
 from scripts.validate_data import validate_data
+from scripts.reporting.common import md_table, write_csv
+from scripts.reporting.dashboard import write_dashboard
+from scripts.reporting.executive_reports import build_action_register, write_action_register
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "02_Data" / "processed"
@@ -18,44 +21,12 @@ def read_csv(name: str) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if not rows:
-        rows = [{"message": "No records"}]
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
-        writer.writeheader()
-        writer.writerows(rows)
-
-
 def parse_date(value: str) -> datetime:
     return datetime.strptime(value, "%Y-%m-%d")
 
 
 def period(value: str) -> str:
     return value[:7]
-
-
-def md_table(rows: list[dict[str, object]]) -> str:
-    if not rows:
-        return "No records."
-    headers = list(rows[0].keys())
-    lines = ["| " + " | ".join(headers) + " |", "| " + " | ".join(["---"] * len(headers)) + " |"]
-    for row in rows:
-        lines.append("| " + " | ".join(str(row.get(header, "")) for header in headers) + " |")
-    return "\n".join(lines)
-
-
-def format_kpi_value(kpi: str, value: object) -> str:
-    if isinstance(value, str):
-        return value
-    if "pct" in kpi.lower() or "rate" in kpi.lower() or "margin" in kpi.lower():
-        return f"{float(value):,.2f}%"
-    if kpi in {"Total net revenue", "ADR", "RevPAR", "Open AR balance", "Operating profit", "Purchase spend"}:
-        return f"${float(value):,.2f}"
-    if isinstance(value, int) or float(value).is_integer():
-        return f"{float(value):,.0f}"
-    return f"{float(value):,.2f}"
 
 
 def svg_bar(path: Path, title: str, labels: list[str], values: list[float], color: str = "#2563eb") -> None:
@@ -250,44 +221,12 @@ def main() -> None:
     ]
     write_csv(ROOT / "09_Documentation/kpi_summary.csv", kpis)
     (ROOT / "09_Documentation/kpi_summary.md").write_text("# KPI Summary\n\n" + md_table(kpis) + "\n", encoding="utf-8")
-    write_report(ROOT / "09_Documentation/final_executive_summary.md", "Final Executive Summary", [("Portfolio positioning", "A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic synthetic data, Python, SQL-ready CSVs, Markdown reporting, SVG charts, and an HTML dashboard."), ("Most important findings", md_table(kpis)), ("Recommended actions", "Prioritize overdue AR follow-up, review unfavorable cost centers, protect high-performing direct and contract revenue channels, and mitigate vendor/inventory risks before service levels are affected."), ("Limitations", "Synthetic/anonymized data only; not a real SAP S/4HANA implementation and not production forecasting.")])
+    actions = build_action_register(kpis, cc_rows, vendor_rows, reorder, channel, best)
+    write_action_register(ROOT, actions)
+    write_report(ROOT / "09_Documentation/final_executive_summary.md", "Final Executive Summary", [("Portfolio positioning", "A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic synthetic data, Python, SQL-ready CSVs, Markdown reporting, SVG charts, and an HTML dashboard."), ("Most important findings", md_table(kpis)), ("Recommended actions", md_table(actions)), ("Limitations", "Synthetic/anonymized data only; not a real SAP S/4HANA implementation and not production forecasting.")])
     write_report(ROOT / "09_Documentation/final_project_report.md", "Final Project Report", [("Business problem", "Hospitality leaders need one management view connecting commercial performance, receivables, cost-center accountability, purchasing reliability, inventory risk, and short-term planning."), ("Project objective", "Build a GitHub-reviewable analytics prototype that converts deterministic synthetic ERP-style CSV data into FI, CO, SD, MM, forecasting, KPI, SQL, and dashboard outputs."), ("Data model summary", "Customer, vendor, and calendar master data connect to sales revenue, customer invoices, customer payments, cost-center actuals, procurement records, and inventory movements. The model is intentionally small, auditable, and text-based."), ("FI findings", f"Collection rate is {collection_rate:.1f}% with open AR of {sum(buckets.values()):,.2f}. Aging buckets include current, 1-30, 31-60, 61-90, and 90+ day exposure for credit-control prioritization."), ("CO findings", f"Operating profit margin is {margin:.1f}%. The largest unfavorable cost-center variance is {cc_rows[0]['cost_center_name']} at {cc_rows[0]['variance_pct']:.1f}%."), ("SD findings", f"Occupancy is {occupancy_rate:.1f}%, ADR is {adr:,.2f}, and RevPAR is {revpar:,.2f}. Channel and segment summaries show where revenue concentration should be reviewed."), ("MM findings", f"The prototype identifies {len(reorder)} reorder alerts and vendor delivery variation. Highest vendor delay rate is {worst_vendor['vendor_name']} at {worst_vendor['vendor_delay_rate_pct']}%."), ("Forecasting findings", f"Revenue baselines compare naive, moving-average, and linear-trend methods; {best['model']} has the best three-month holdout MAPE at {best['mape_pct']}%. Cash collection forecasting is labeled separately and uses a three-month moving average."), ("Executive KPI summary", md_table(kpis)), ("Management recommendations", "Prioritize overdue AR follow-up, review unfavorable cost-center variances, refine channel and segment strategy, act on reorder alerts, and review delayed vendors before service levels are affected."), ("SAP/ERP relevance", "The design is inspired by SAP S/4HANA process areas, master data, transactional documents, exception monitoring, and management reporting while remaining a portfolio analytics prototype."), ("Limitations", "No live SAP connection, no confidential data, no binary BI file, and simplified business logic. Forecasts are directional baselines, not production commitments.")])
 
-    cards = "".join(f"<div class='card'><span>{row['kpi']}</span><strong>{format_kpi_value(row['kpi'], row['value'])}</strong></div>" for row in kpis)
-    links = "".join(f"<li><a href='{href}'>{label}</a></li>" for label, href in [("FI report", "../../03_FI_Module/outputs/fi_report.md"), ("CO report", "../../04_CO_Module/outputs/co_report.md"), ("SD report", "../../05_SD_Module/outputs/sd_report.md"), ("MM report", "../../06_MM_Module/outputs/mm_report.md"), ("Forecast report", "../../07_Analytics_Forecasting/outputs/forecast_report.md"), ("Final report", "../../09_Documentation/final_project_report.md")])
-    html = f"""<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <title>Hospitality ERP Analytics Dashboard</title>
-  <style>
-    body {{ font-family: Arial, sans-serif; margin: 28px; color: #111827; background: #f8fafc; }}
-    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }}
-    .card {{ background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 15px; }}
-    .card span {{ display: block; color: #4b5563; font-size: 13px; }}
-    .card strong {{ font-size: 23px; }}
-    iframe {{ width: 100%; height: 430px; border: 1px solid #e5e7eb; background: white; border-radius: 10px; margin: 10px 0; }}
-    a {{ color: #2563eb; }}
-  </style>
-</head>
-<body>
-  <h1>Hospitality ERP Analytics Dashboard</h1>
-  <p>SAP S/4HANA-inspired prototype using deterministic synthetic/anonymized data only. Charts are SVG/text-based; no screenshots or binary BI files are generated.</p>
-  <section class='grid'>
-    {cards}
-  </section>
-  <h2>Module charts</h2>
-  <iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe>
-  <iframe src='../../04_CO_Module/outputs/cost_center_actuals.svg'></iframe>
-  <iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe>
-  <iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe>
-  <iframe src='../../07_Analytics_Forecasting/outputs/revenue_forecast.svg'></iframe>
-  <h2>Reports</h2>
-  <ul>{links}</ul>
-</body>
-</html>
-"""
-    (ROOT / "08_BI_Integration/dashboard/index.html").write_text(html, encoding="utf-8")
+    write_dashboard(ROOT, kpis, actions)
 
 
 if __name__ == "__main__":
