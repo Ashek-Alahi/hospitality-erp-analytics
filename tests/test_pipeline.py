@@ -13,27 +13,44 @@ DATA = ROOT / "02_Data" / "processed"
 KEY_OUTPUTS = [
     ROOT / "03_FI_Module" / "outputs" / "fi_report.md",
     ROOT / "03_FI_Module" / "outputs" / "ar_aging.csv",
+    ROOT / "03_FI_Module" / "outputs" / "overdue_receivables_summary.csv",
     ROOT / "04_CO_Module" / "outputs" / "co_report.md",
+    ROOT / "04_CO_Module" / "outputs" / "cost_center_variance.csv",
     ROOT / "05_SD_Module" / "outputs" / "sd_report.md",
+    ROOT / "05_SD_Module" / "outputs" / "hospitality_kpis.csv",
     ROOT / "06_MM_Module" / "outputs" / "mm_report.md",
+    ROOT / "06_MM_Module" / "outputs" / "inventory_risk_summary.csv",
     ROOT / "07_Analytics_Forecasting" / "outputs" / "forecast_report.md",
     ROOT / "08_BI_Integration" / "dashboard" / "index.html",
     ROOT / "09_Documentation" / "kpi_summary.csv",
     ROOT / "09_Documentation" / "kpi_summary.md",
+    ROOT / "02_Data" / "sql" / "example_analysis_queries.sql",
 ]
 
 EXPECTED_KPIS = {
     "Total net revenue",
+    "Occupancy rate pct",
+    "ADR",
+    "RevPAR",
+    "Collection rate pct",
     "Open AR balance",
     "Operating profit",
+    "Operating profit margin pct",
     "Purchase spend",
+    "Vendor delay rate pct",
     "Reorder alerts",
+    "Best forecast baseline",
 }
 
 
 def read_header(path: Path) -> set[str]:
     with path.open(newline="", encoding="utf-8") as handle:
         return set(next(csv.reader(handle)))
+
+
+def read_rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
 
 
 def test_required_input_csv_files_exist():
@@ -67,6 +84,23 @@ def test_kpi_summary_contains_expected_kpi_names():
     with (ROOT / "09_Documentation" / "kpi_summary.csv").open(newline="", encoding="utf-8") as handle:
         kpis = {row["kpi"] for row in csv.DictReader(handle)}
     assert EXPECTED_KPIS <= kpis
+
+
+def test_business_exceptions_are_visible():
+    aging_buckets = {row["aging_bucket"] for row in read_rows(ROOT / "03_FI_Module" / "outputs" / "ar_aging.csv") if float(row["outstanding_balance"]) > 0}
+    assert {"31-60", "61-90", "90+"} <= aging_buckets
+    assert read_rows(ROOT / "06_MM_Module" / "outputs" / "reorder_alerts.csv")
+    vendors = read_rows(ROOT / "06_MM_Module" / "outputs" / "vendor_performance.csv")
+    assert any(float(row["vendor_delay_rate_pct"]) > 0 for row in vendors)
+    cost_centers = read_rows(ROOT / "04_CO_Module" / "outputs" / "cost_center_variance.csv")
+    assert any(float(row["variance_pct"]) > 0 for row in cost_centers)
+    assert any(float(row["variance_pct"]) < 0 for row in cost_centers)
+
+
+def test_forecast_compares_three_baseline_models():
+    metrics = read_rows(ROOT / "07_Analytics_Forecasting" / "outputs" / "forecast_metrics.csv")
+    assert {"naive forecast", "moving average forecast", "linear trend forecast"} <= {row["model"] for row in metrics}
+    assert {"model", "holdout_months", "mape_pct", "mae"} <= set(metrics[0])
 
 
 def test_pipeline_does_not_generate_binary_files():

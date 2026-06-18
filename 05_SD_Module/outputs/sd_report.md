@@ -1,28 +1,40 @@
 # SD Analysis Report
 
-Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype.
+Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
 
-## Revenue by category
-| revenue_category | net_revenue |
+## Key findings
+Occupancy is 86.5%, ADR is 126.00, and RevPAR is 108.93.
+
+## Hospitality KPIs
+| kpi | value |
 | --- | --- |
-| Events | 638723.51 |
-| Food & Beverage | 897337.89 |
-| Rooms | 2225492.55 |
-| Spa | 339906.5 |
+| Occupancy rate pct | 86.45 |
+| ADR | 126.0 |
+| RevPAR | 108.93 |
 
 ## Revenue by channel
 | channel | net_revenue |
 | --- | --- |
-| Corporate | 955680.12 |
-| Direct | 1327333.5 |
-| Group | 730033.42 |
-| OTA | 1088413.41 |
+| Direct | 4137754.59 |
+| OTA | 3607896.02 |
+| Corporate Contract | 2816245.92 |
+| Group Sales | 2305113.51 |
 
-## Customer segments
+## Revenue by segment
 | segment | net_revenue |
 | --- | --- |
-| Leisure Group | 1318988.18 |
-| MICE | 808761.77 |
-| Direct Leisure | 709946.64 |
-| Corporate | 650989.65 |
-| OTA | 612774.21 |
+| Group/Event | 2398756.71 |
+| Leisure | 2310724.09 |
+| OTA | 2189987.6 |
+| Government | 2063500.47 |
+| Crew/Contract | 1953103.38 |
+| Corporate | 1950937.79 |
+
+## Business meaning
+Channel and segment mix should guide pricing, promotion timing, and direct-booking strategy. OTA volume should be balanced against margin and commission pressure.
+
+## ERP/SAP relevance
+This is SD-inspired order/billing analytics connected to customer master segments and revenue categories.
+
+## Limitations
+No reservations system integration, cancellations, commissions, loyalty tiering, or daily room type inventory is included.

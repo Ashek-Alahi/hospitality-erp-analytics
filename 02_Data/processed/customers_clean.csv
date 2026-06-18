@@ -1,7 +1,7 @@
 customer_id,customer_name,segment,region
-C001,Corporate North,Corporate,Sapporo
-C002,Snow Travel Co,Leisure Group,Niseko
-C003,Hokkaido Events,MICE,Sapporo
-C004,Family Direct,Direct Leisure,Asahikawa
-C005,OTA Guests,OTA,Online
-C006,Ski Club Japan,Leisure Group,Furano
+C001,Northstar Corporate Travel,Corporate,Northeast
+C002,Blue Harbor Events,Group/Event,Southeast
+C003,Leisure Direct Guests,Leisure,National
+C004,Online Travel Agencies,OTA,Digital
+C005,Government Conferences,Government,Midwest
+C006,Airline Crew Contracts,Crew/Contract,West

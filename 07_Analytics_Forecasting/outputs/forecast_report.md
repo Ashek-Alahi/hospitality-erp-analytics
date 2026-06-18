@@ -1,34 +1,22 @@
 # Analytics and Forecasting Report
 
-Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype.
+Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
 
-## Baseline forecasting approach
-This report uses simple baseline methods for portfolio demonstration: a linear revenue trend baseline and a 3-month moving average for cash collections. It is not a production-grade predictive model and should not be used for operational commitments without a longer history, external demand drivers, and formal model monitoring.
+## Key findings
+Compared naive, moving average, and linear trend baselines. Best holdout MAPE is 9.74% from linear trend forecast.
 
-## Revenue forecast
-| period | net_revenue | forecast_revenue | absolute_error |
-| --- | --- | --- | --- |
-| 2025-07 | 381763.59 | 330365.84 | 51397.75 |
-| 2025-08 | 379286.07 | 311539.11 | 67746.96 |
-| 2025-09 | 309965.48 | 292712.38 | 17253.1 |
-| 2025-10 | 273885.65 | 273885.65 | 0.0 |
-| 2025-11 | 274610.12 | 255058.92 | 19551.2 |
-| 2025-12 | 430348.27 | 236232.19 | 194116.08 |
-
-## Evaluation metrics
-MAPE (Mean Absolute Percentage Error) shows average absolute forecast error as a percentage of actual revenue for the holdout months. MAE (Mean Absolute Error) shows the average absolute currency-unit error. Because the dataset is synthetic and short, these metrics are directional only and should not be interpreted as proof of reliable future accuracy.
-
+## Forecast metrics
 | model | holdout_months | mape_pct | mae |
 | --- | --- | --- | --- |
-| Revenue linear trend baseline | 2 | 26.11 | 106833.64 |
-| Cash collection 3-month moving average | 0 | n/a | n/a |
+| naive forecast | 3 | 14.15 | 90603.48 |
+| moving average forecast | 3 | 16.93 | 103537.6 |
+| linear trend forecast | 3 | 9.74 | 59202.52 |
 
-## Cash-flow forecast
-| period | payment_amount | forecast_cash_collection |
-| --- | --- | --- |
-| 2025-06 | 78421.94 | 97924.09 |
-| 2025-07 | 89365.23 | 81835.11 |
-| 2025-08 | 109564.89 | 81998.6 |
-| 2025-09 | 109798.36 | 92450.69 |
-| 2025-10 | 89773.25 | 102909.49 |
-| 2025-11 | 78643.43 | 103045.5 |
+## Business meaning
+Use the selected baseline as a planning reference only, not an automated commitment. Large variances should trigger review of events, pricing, channel mix, and seasonality.
+
+## ERP/SAP relevance
+Forecast outputs can support demand planning, cash planning, and management reporting outside core transactional processing.
+
+## Limitations
+This is not production-grade forecasting; it excludes holidays, events, competitor rates, weather, and formal backtesting across many seasons.
