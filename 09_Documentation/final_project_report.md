@@ -3,12 +3,30 @@
 Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
 
 ## Business problem
-Hospitality management needs connected visibility across revenue, receivables, cost control, procurement, inventory, and forecast planning.
+Hospitality leaders need one management view connecting commercial performance, receivables, cost-center accountability, purchasing reliability, inventory risk, and short-term planning.
 
-## ERP module coverage
-FI covers AR aging and collections; CO covers budget variance and operating margin; SD covers occupancy, ADR, RevPAR, channel, segment, and category revenue; MM covers vendor delays and reorder risk.
+## Project objective
+Build a GitHub-reviewable analytics prototype that converts deterministic synthetic ERP-style CSV data into FI, CO, SD, MM, forecasting, KPI, SQL, and dashboard outputs.
 
-## KPI summary
+## Data model summary
+Customer, vendor, and calendar master data connect to sales revenue, customer invoices, customer payments, cost-center actuals, procurement records, and inventory movements. The model is intentionally small, auditable, and text-based.
+
+## FI findings
+Collection rate is 82.4% with open AR of 1,705,443.94. Aging buckets include current, 1-30, 31-60, 61-90, and 90+ day exposure for credit-control prioritization.
+
+## CO findings
+Operating profit margin is 56.9%. The largest unfavorable cost-center variance is Food & Beverage at 4.6%.
+
+## SD findings
+Occupancy is 86.5%, ADR is 126.00, and RevPAR is 108.93. Channel and segment summaries show where revenue concentration should be reviewed.
+
+## MM findings
+The prototype identifies 113 reorder alerts and vendor delivery variation. Highest vendor delay rate is GuestTech Supplies at 70.83%.
+
+## Forecasting findings
+Revenue baselines compare naive, moving-average, and linear-trend methods; linear trend forecast has the best three-month holdout MAPE at 9.74%. Cash collection forecasting is labeled separately and uses a three-month moving average.
+
+## Executive KPI summary
 | kpi | value |
 | --- | --- |
 | Total net revenue | 12867010.04 |
@@ -25,10 +43,10 @@ FI covers AR aging and collections; CO covers budget variance and operating marg
 | Best forecast baseline | linear trend forecast |
 
 ## Management recommendations
-Use the reports as an exception dashboard: collect aged receivables, investigate cost-center overruns, refine pricing/channel strategy, and act on vendor or reorder alerts.
+Prioritize overdue AR follow-up, review unfavorable cost-center variances, refine channel and segment strategy, act on reorder alerts, and review delayed vendors before service levels are affected.
 
-## SAP relevance
-The design is inspired by SAP S/4HANA process areas, master data, documents, and management reporting, but it is a portfolio prototype only.
+## SAP/ERP relevance
+The design is inspired by SAP S/4HANA process areas, master data, transactional documents, exception monitoring, and management reporting while remaining a portfolio analytics prototype.
 
 ## Limitations
-No live SAP connection, no confidential data, no binary BI file, and simplified business logic.
+No live SAP connection, no confidential data, no binary BI file, and simplified business logic. Forecasts are directional baselines, not production commitments.

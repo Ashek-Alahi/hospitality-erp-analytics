@@ -1,6 +1,6 @@
 # SAP S/4HANA-Inspired ERP Analytics Architecture
 
-The following Mermaid diagram replaces the former binary architecture image with a text-based diagram that can be reviewed directly in GitHub.
+The following Mermaid diagram provides a text-based architecture view that can be reviewed directly in GitHub.
 
 ```mermaid
 flowchart LR

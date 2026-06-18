@@ -46,6 +46,18 @@ def md_table(rows: list[dict[str, object]]) -> str:
     return "\n".join(lines)
 
 
+def format_kpi_value(kpi: str, value: object) -> str:
+    if isinstance(value, str):
+        return value
+    if "pct" in kpi.lower() or "rate" in kpi.lower() or "margin" in kpi.lower():
+        return f"{float(value):,.2f}%"
+    if kpi in {"Total net revenue", "ADR", "RevPAR", "Open AR balance", "Operating profit", "Purchase spend"}:
+        return f"${float(value):,.2f}"
+    if isinstance(value, int) or float(value).is_integer():
+        return f"{float(value):,.0f}"
+    return f"{float(value):,.2f}"
+
+
 def svg_bar(path: Path, title: str, labels: list[str], values: list[float], color: str = "#2563eb") -> None:
     max_value = max(values) if values else 1
     bar_width = 680 / max(len(values), 1)
@@ -199,11 +211,39 @@ def main() -> None:
     best = min(metrics, key=lambda row: row["mape_pct"])
     for i, row in enumerate(trend):
         forecast_rows.append({"period": row["period"], "net_revenue": row["net_revenue"], "naive_forecast": round(models["naive forecast"][i], 2), "moving_average_forecast": round(models["moving average forecast"][i], 2), "linear_trend_forecast": round(models["linear trend forecast"][i], 2), "recommended_baseline": best["model"]})
+    cash_actuals = [float(row["payment_amount"]) for row in collections]
+    cash_forecast_rows = []
+    for index, row in enumerate(collections):
+        cash_forecast_rows.append({
+            "period": row["period"],
+            "actual_cash_collected": row["payment_amount"],
+            "forecast_cash_collected": "",
+            "record_type": "actual",
+            "method": "historical collections",
+        })
+    last_period = datetime.strptime(collections[-1]["period"] + "-01", "%Y-%m-%d")
+    rolling_values = cash_actuals[-3:]
+    for horizon in range(1, 4):
+        year = last_period.year + (last_period.month + horizon - 1) // 12
+        month = (last_period.month + horizon - 1) % 12 + 1
+        forecast_value = round(sum(rolling_values[-3:]) / min(len(rolling_values), 3), 2)
+        rolling_values.append(forecast_value)
+        cash_forecast_rows.append({
+            "period": f"{year}-{month:02d}",
+            "actual_cash_collected": "",
+            "forecast_cash_collected": forecast_value,
+            "record_type": "forecast",
+            "method": "three-month moving average",
+        })
+
     write_csv(ROOT / "07_Analytics_Forecasting/outputs/revenue_forecast.csv", forecast_rows)
     write_csv(ROOT / "07_Analytics_Forecasting/outputs/forecast_metrics.csv", metrics)
-    write_csv(ROOT / "07_Analytics_Forecasting/outputs/cash_flow_forecast.csv", collections)
+    write_csv(ROOT / "07_Analytics_Forecasting/outputs/cash_collection_forecast.csv", cash_forecast_rows)
+    legacy_cash_path = ROOT / "07_Analytics_Forecasting/outputs/cash_flow_forecast.csv"
+    if legacy_cash_path.exists():
+        legacy_cash_path.unlink()
     svg_bar(ROOT / "07_Analytics_Forecasting/outputs/revenue_forecast.svg", "Recommended Revenue Forecast Baseline", [r["period"] for r in forecast_rows], [r[best["model"].replace(" forecast", "_forecast").replace(" ", "_")] for r in forecast_rows], "#ea580c")
-    write_report(ROOT / "07_Analytics_Forecasting/outputs/forecast_report.md", "Analytics and Forecasting Report", [("Key findings", f"Compared naive, moving average, and linear trend baselines. Best holdout MAPE is {best['mape_pct']}% from {best['model']}."), ("Forecast metrics", md_table(metrics)), ("Business meaning", "Use the selected baseline as a planning reference only, not an automated commitment. Large variances should trigger review of events, pricing, channel mix, and seasonality."), ("ERP/SAP relevance", "Forecast outputs can support demand planning, cash planning, and management reporting outside core transactional processing."), ("Limitations", "This is not production-grade forecasting; it excludes holidays, events, competitor rates, weather, and formal backtesting across many seasons.")])
+    write_report(ROOT / "07_Analytics_Forecasting/outputs/forecast_report.md", "Analytics and Forecasting Report", [("Key findings", f"Compared naive, moving average, and linear trend revenue baselines. Best holdout MAPE is {best['mape_pct']}% from {best['model']}. Cash collections use a three-month moving-average baseline for the next three periods."), ("Revenue forecast metrics", md_table(metrics)), ("Cash collection forecast", md_table(cash_forecast_rows[-6:])), ("Business meaning", "Use these baselines as directional planning references only. Large variances should trigger review of events, pricing, channel mix, seasonality, payment terms, and AR follow-up."), ("ERP/SAP relevance", "Forecast outputs can support demand planning, cash collection planning, and management reporting outside core transactional processing."), ("Limitations", "This is not production-grade forecasting; it excludes holidays, events, competitor rates, weather, payment disputes, and formal backtesting across many seasons.")])
 
     kpis = [
         {"kpi": "Total net revenue", "value": round(total_revenue, 2)}, {"kpi": "Occupancy rate pct", "value": round(occupancy_rate, 2)}, {"kpi": "ADR", "value": round(adr, 2)}, {"kpi": "RevPAR", "value": round(revpar, 2)}, {"kpi": "Collection rate pct", "value": round(collection_rate, 2)}, {"kpi": "Open AR balance", "value": round(sum(buckets.values()), 2)}, {"kpi": "Operating profit", "value": round(operating_profit, 2)}, {"kpi": "Operating profit margin pct", "value": round(margin, 2)}, {"kpi": "Purchase spend", "value": round(sum(float(p["purchase_amount"]) for p in procurement), 2)}, {"kpi": "Vendor delay rate pct", "value": round(sum(1 for v in procurement if parse_date(v["received_date"]) > parse_date(v["promised_date"])) / len(procurement) * 100, 2)}, {"kpi": "Reorder alerts", "value": len(reorder)}, {"kpi": "Best forecast baseline", "value": best["model"]},
@@ -211,11 +251,42 @@ def main() -> None:
     write_csv(ROOT / "09_Documentation/kpi_summary.csv", kpis)
     (ROOT / "09_Documentation/kpi_summary.md").write_text("# KPI Summary\n\n" + md_table(kpis) + "\n", encoding="utf-8")
     write_report(ROOT / "09_Documentation/final_executive_summary.md", "Final Executive Summary", [("Portfolio positioning", "A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic synthetic data, Python, SQL-ready CSVs, Markdown reporting, SVG charts, and an HTML dashboard."), ("Most important findings", md_table(kpis)), ("Recommended actions", "Prioritize overdue AR follow-up, review unfavorable cost centers, protect high-performing direct and contract revenue channels, and mitigate vendor/inventory risks before service levels are affected."), ("Limitations", "Synthetic/anonymized data only; not a real SAP S/4HANA implementation and not production forecasting.")])
-    write_report(ROOT / "09_Documentation/final_project_report.md", "Final Project Report", [("Business problem", "Hospitality management needs connected visibility across revenue, receivables, cost control, procurement, inventory, and forecast planning."), ("ERP module coverage", "FI covers AR aging and collections; CO covers budget variance and operating margin; SD covers occupancy, ADR, RevPAR, channel, segment, and category revenue; MM covers vendor delays and reorder risk."), ("KPI summary", md_table(kpis)), ("Management recommendations", "Use the reports as an exception dashboard: collect aged receivables, investigate cost-center overruns, refine pricing/channel strategy, and act on vendor or reorder alerts."), ("SAP relevance", "The design is inspired by SAP S/4HANA process areas, master data, documents, and management reporting, but it is a portfolio prototype only."), ("Limitations", "No live SAP connection, no confidential data, no binary BI file, and simplified business logic.")])
+    write_report(ROOT / "09_Documentation/final_project_report.md", "Final Project Report", [("Business problem", "Hospitality leaders need one management view connecting commercial performance, receivables, cost-center accountability, purchasing reliability, inventory risk, and short-term planning."), ("Project objective", "Build a GitHub-reviewable analytics prototype that converts deterministic synthetic ERP-style CSV data into FI, CO, SD, MM, forecasting, KPI, SQL, and dashboard outputs."), ("Data model summary", "Customer, vendor, and calendar master data connect to sales revenue, customer invoices, customer payments, cost-center actuals, procurement records, and inventory movements. The model is intentionally small, auditable, and text-based."), ("FI findings", f"Collection rate is {collection_rate:.1f}% with open AR of {sum(buckets.values()):,.2f}. Aging buckets include current, 1-30, 31-60, 61-90, and 90+ day exposure for credit-control prioritization."), ("CO findings", f"Operating profit margin is {margin:.1f}%. The largest unfavorable cost-center variance is {cc_rows[0]['cost_center_name']} at {cc_rows[0]['variance_pct']:.1f}%."), ("SD findings", f"Occupancy is {occupancy_rate:.1f}%, ADR is {adr:,.2f}, and RevPAR is {revpar:,.2f}. Channel and segment summaries show where revenue concentration should be reviewed."), ("MM findings", f"The prototype identifies {len(reorder)} reorder alerts and vendor delivery variation. Highest vendor delay rate is {worst_vendor['vendor_name']} at {worst_vendor['vendor_delay_rate_pct']}%."), ("Forecasting findings", f"Revenue baselines compare naive, moving-average, and linear-trend methods; {best['model']} has the best three-month holdout MAPE at {best['mape_pct']}%. Cash collection forecasting is labeled separately and uses a three-month moving average."), ("Executive KPI summary", md_table(kpis)), ("Management recommendations", "Prioritize overdue AR follow-up, review unfavorable cost-center variances, refine channel and segment strategy, act on reorder alerts, and review delayed vendors before service levels are affected."), ("SAP/ERP relevance", "The design is inspired by SAP S/4HANA process areas, master data, transactional documents, exception monitoring, and management reporting while remaining a portfolio analytics prototype."), ("Limitations", "No live SAP connection, no confidential data, no binary BI file, and simplified business logic. Forecasts are directional baselines, not production commitments.")])
 
-    cards = "".join(f"<div class='card'><span>{row['kpi']}</span><strong>{row['value']}</strong></div>" for row in kpis)
+    cards = "".join(f"<div class='card'><span>{row['kpi']}</span><strong>{format_kpi_value(row['kpi'], row['value'])}</strong></div>" for row in kpis)
     links = "".join(f"<li><a href='{href}'>{label}</a></li>" for label, href in [("FI report", "../../03_FI_Module/outputs/fi_report.md"), ("CO report", "../../04_CO_Module/outputs/co_report.md"), ("SD report", "../../05_SD_Module/outputs/sd_report.md"), ("MM report", "../../06_MM_Module/outputs/mm_report.md"), ("Forecast report", "../../07_Analytics_Forecasting/outputs/forecast_report.md"), ("Final report", "../../09_Documentation/final_project_report.md")])
-    html = f"""<!doctype html><html><head><meta charset='utf-8'><title>Hospitality ERP Analytics Dashboard</title><style>body{{font-family:Arial;margin:28px;color:#111827;background:#f8fafc}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}}.card{{background:white;border:1px solid #d1d5db;border-radius:10px;padding:15px}}.card span{{display:block;color:#4b5563;font-size:13px}}.card strong{{font-size:23px}}iframe{{width:100%;height:430px;border:1px solid #e5e7eb;background:white;border-radius:10px;margin:10px 0}}a{{color:#2563eb}}</style></head><body><h1>Hospitality ERP Analytics Dashboard</h1><p>SAP S/4HANA-inspired prototype using deterministic synthetic/anonymized data only. Charts are SVG/text-based; no screenshots or binary BI files are generated.</p><section class='grid'>{cards}</section><h2>Module charts</h2><iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe><iframe src='../../04_CO_Module/outputs/cost_center_actuals.svg'></iframe><iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe><iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe><iframe src='../../07_Analytics_Forecasting/outputs/revenue_forecast.svg'></iframe><h2>Reports</h2><ul>{links}</ul></body></html>"""
+    html = f"""<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Hospitality ERP Analytics Dashboard</title>
+  <style>
+    body {{ font-family: Arial, sans-serif; margin: 28px; color: #111827; background: #f8fafc; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }}
+    .card {{ background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 15px; }}
+    .card span {{ display: block; color: #4b5563; font-size: 13px; }}
+    .card strong {{ font-size: 23px; }}
+    iframe {{ width: 100%; height: 430px; border: 1px solid #e5e7eb; background: white; border-radius: 10px; margin: 10px 0; }}
+    a {{ color: #2563eb; }}
+  </style>
+</head>
+<body>
+  <h1>Hospitality ERP Analytics Dashboard</h1>
+  <p>SAP S/4HANA-inspired prototype using deterministic synthetic/anonymized data only. Charts are SVG/text-based; no screenshots or binary BI files are generated.</p>
+  <section class='grid'>
+    {cards}
+  </section>
+  <h2>Module charts</h2>
+  <iframe src='../../03_FI_Module/outputs/revenue_trend.svg'></iframe>
+  <iframe src='../../04_CO_Module/outputs/cost_center_actuals.svg'></iframe>
+  <iframe src='../../05_SD_Module/outputs/revenue_by_channel.svg'></iframe>
+  <iframe src='../../06_MM_Module/outputs/purchase_spend.svg'></iframe>
+  <iframe src='../../07_Analytics_Forecasting/outputs/revenue_forecast.svg'></iframe>
+  <h2>Reports</h2>
+  <ul>{links}</ul>
+</body>
+</html>
+"""
     (ROOT / "08_BI_Integration/dashboard/index.html").write_text(html, encoding="utf-8")
 
 
