@@ -1,51 +1,58 @@
-# Hospitality ERP Analytics MVP
+# Hospitality ERP Analytics Portfolio Project
 
-A completed portfolio-grade, SAP S/4HANA-inspired hospitality ERP analytics prototype using synthetic/anonymized data only. This is not a real SAP implementation; it is a practical analytics project that demonstrates ERP process knowledge, SQL-ready data modeling, Python automation, and business reporting.
+A portfolio-ready **SAP S/4HANA-inspired hospitality ERP analytics prototype** using deterministic synthetic/anonymized data only. This repository does **not** claim to be a real SAP S/4HANA implementation; it demonstrates how FI, CO, SD, MM, SQL, Python, forecasting baselines, and BI-style reporting can be connected in a GitHub-reviewable analytics project.
 
 ## Business Problem
 
-Hospitality leaders need one view of revenue, receivables, cost control, procurement, inventory, and short-term forecasts. In many organizations these topics are reviewed separately, which makes it harder to connect sales performance, cash collection, operating cost, vendor reliability, and stock risk.
+Hotel leadership needs a connected view of revenue performance, receivables, operating cost control, procurement reliability, inventory risk, and short-term planning. These topics are often reviewed in separate spreadsheets or systems, making it difficult to connect commercial decisions with working capital, service levels, and cost-center accountability.
 
-This MVP shows how ERP-style data can be organized into a decision-support layer for finance and operations.
+This project converts small ERP-style CSV tables into module reports, exception outputs, SVG charts, SQL examples, and an HTML dashboard.
+
+## What Makes This Useful for ERP / Analytics Interviews
+
+- Shows accounting and ERP process knowledge across FI, CO, SD, and MM.
+- Uses readable Python automation rather than manual spreadsheet work.
+- Keeps data, reports, charts, SQL, and dashboard files text-based for GitHub review.
+- Includes business exceptions instead of perfect demo data: overdue AR, vendor delays, reorder alerts, and cost-center variances.
+- Explains business meaning, management action, SAP relevance, and limitations.
 
 ## ERP Module Coverage
 
-| Module | Coverage | Key outputs |
+| Module | Analytics coverage | Important outputs |
 | --- | --- | --- |
-| FI | AR aging, outstanding balance, revenue trend, cash collections | `03_FI_Module/outputs/fi_report.md` |
-| CO | Budget vs actual, cost center variance, profitability | `04_CO_Module/outputs/co_report.md` |
-| SD | Sales performance, revenue by category/channel, customer segments | `05_SD_Module/outputs/sd_report.md` |
-| MM | Purchase spend, vendor performance, inventory movement, reorder alerts | `06_MM_Module/outputs/mm_report.md` |
-| Analytics | Revenue forecast and cash-flow forecast baselines | `07_Analytics_Forecasting/outputs/forecast_report.md` |
-| BI | HTML dashboard and Power BI CSV connection guidance | `08_BI_Integration/dashboard/index.html` |
+| FI | AR aging, overdue receivables, collection rate, revenue trend, cash collections | `03_FI_Module/outputs/fi_report.md` |
+| CO | Budget vs actual, variance percentage, unfavorable cost-center ranking, operating profit margin | `04_CO_Module/outputs/co_report.md` |
+| SD | Occupancy, ADR, RevPAR, revenue by channel, customer segment, and category | `05_SD_Module/outputs/sd_report.md` |
+| MM | Purchase spend, vendor delay rate, on-time delivery, reorder alerts, inventory risk | `06_MM_Module/outputs/mm_report.md` |
+| Forecasting | Naive, moving average, and linear trend baseline comparison using MAPE and MAE | `07_Analytics_Forecasting/outputs/forecast_report.md` |
+| BI | HTML dashboard with KPI cards, SVG charts, and report links | `08_BI_Integration/dashboard/index.html` |
 
-## Repository Structure
+## Hospitality and ERP KPIs
 
-```text
-01_Project_Foundation/        Project scope and ERP module mapping notes
-02_Data/                      Synthetic raw/processed CSV data and SQL scripts
-03_FI_Module/                 Financial Accounting analysis and outputs
-04_CO_Module/                 Controlling analysis and outputs
-05_SD_Module/                 Sales and Distribution analysis and outputs
-06_MM_Module/                 Materials Management analysis and outputs
-07_Analytics_Forecasting/     Forecasting outputs and model metrics
-08_BI_Integration/            HTML dashboard and BI instructions
-09_Documentation/             Data dictionary, KPI summary, final reports
-scripts/                      Reusable Python analytics pipeline
-run_all.py                    One-command project runner
-requirements.txt              Dependency note
-```
+The pipeline generates these KPIs in `09_Documentation/kpi_summary.csv`:
+
+- Total net revenue
+- Occupancy rate
+- ADR, Average Daily Rate
+- RevPAR, Revenue per Available Room
+- Collection rate
+- Open AR balance
+- Operating profit and operating profit margin
+- Purchase spend
+- Vendor delay rate
+- Reorder alert count
+- Best baseline forecast model
 
 ## Data Model
 
-The project uses CSV files that can be reviewed directly on GitHub and imported into SQLite if desired.
+The data is deterministic, synthetic, and intentionally small enough for GitHub review while covering 24 months of activity.
 
-- Master data: `customers`, `vendors`, `calendar`
-- Revenue and FI: `sales_revenue`, `customer_invoices`, `customer_payments`
-- CO: `cost_center_budget_actual`
-- MM: `procurement_vendor`, `inventory_movements`
+- Master data: customers, vendors, calendar
+- FI / revenue: customer invoices, customer payments, sales revenue
+- CO: cost center budget and actuals
+- MM: procurement vendor records and inventory movements
 
-SQL definitions are available in `02_Data/sql/schema.sql`, and SQLite CLI import guidance is available in `02_Data/sql/load_data.sql`. No `.db` or `.sqlite` file is included or generated.
+The generator uses a fixed seed in `scripts/generate_synthetic_data.py` and writes both raw and processed CSV files. No `.db`, `.sqlite`, `.xlsx`, `.pbix`, image, archive, or other binary output is required.
 
 ## How to Run
 
@@ -53,36 +60,52 @@ SQL definitions are available in `02_Data/sql/schema.sql`, and SQLite CLI import
 python run_all.py
 ```
 
-The pipeline uses only the Python standard library. Running it regenerates CSV KPI tables, Markdown reports, SVG charts, and the HTML dashboard.
+Run tests:
 
-## Key Outputs
+```bash
+pytest
+```
 
-| Output | Path |
-| --- | --- |
-| KPI summary CSV | `09_Documentation/kpi_summary.csv` |
-| KPI summary Markdown | `09_Documentation/kpi_summary.md` |
-| Data dictionary | `09_Documentation/data_dictionary.md` |
-| Final executive summary | `09_Documentation/final_executive_summary.md` |
-| Final project report | `09_Documentation/final_project_report.md` |
-| HTML dashboard | `08_BI_Integration/dashboard/index.html` |
-| Revenue trend SVG | `03_FI_Module/outputs/revenue_trend.svg` |
-| Cost center actuals SVG | `04_CO_Module/outputs/cost_center_actuals.svg` |
-| Revenue by channel SVG | `05_SD_Module/outputs/revenue_by_channel.svg` |
-| Purchase spend SVG | `06_MM_Module/outputs/purchase_spend.svg` |
+The project uses only the Python standard library for the pipeline. `pytest` is used for test execution.
 
-## Current KPI Snapshot
+## Important Findings to Review
 
-See `09_Documentation/kpi_summary.md` for the regenerated KPI table. The MVP highlights total net revenue, open AR balance, operating profit, purchase spend, and reorder alerts.
+After running the pipeline, start with:
 
-## Power BI Use
+1. `09_Documentation/final_executive_summary.md`
+2. `09_Documentation/final_project_report.md`
+3. `08_BI_Integration/dashboard/index.html`
+4. Module reports in `03_FI_Module/outputs/`, `04_CO_Module/outputs/`, `05_SD_Module/outputs/`, and `06_MM_Module/outputs/`
 
-Use **Get Data > Text/CSV** in Power BI to connect to files in `02_Data/processed/` and module output folders. This repository does not include a `.pbix` file because the project is intentionally text-based and GitHub-reviewable.
+The reports identify aged receivables requiring follow-up, cost centers with unfavorable variance, channel/segment revenue patterns, vendor delay risk, and inventory reorder risk.
 
-## Data and Confidentiality Statement
+## SQL Support
 
-All records are synthetic/anonymized sample data created for portfolio demonstration. The project does not include non-public operational data, confidential records, or a claim that this is an SAP S/4HANA implementation.
+SQL table definitions are in `02_Data/sql/schema.sql`. Example business-analysis queries for FI, CO, SD, MM, and executive KPI review are in `02_Data/sql/example_analysis_queries.sql`. The repository intentionally does not create a database file.
+
+## Project Structure
+
+```text
+01_Project_Foundation/        Scope and SAP-inspired module mapping
+02_Data/                      Raw/processed CSV data and SQL scripts
+03_FI_Module/                 Financial Accounting analysis outputs
+04_CO_Module/                 Controlling analysis outputs
+05_SD_Module/                 Sales and Distribution analysis outputs
+06_MM_Module/                 Materials Management analysis outputs
+07_Analytics_Forecasting/     Forecasting outputs and metrics
+08_BI_Integration/            HTML dashboard
+09_Documentation/             KPI summary and final reports
+scripts/                      Data generation, validation, and analytics pipeline
+run_all.py                    One-command project runner
+```
+
+## Limitations
+
+- Synthetic/anonymized data only.
+- SAP S/4HANA-inspired structure only; not a real SAP implementation.
+- Forecasting is deliberately simple and not production-grade.
+- No live ERP connection, reservations system, tax engine, MRP run, cost allocations, or real vendor/customer records.
 
 ## Author
 
-Ashek Alahi  
-Accounting, Finance, ERP Systems, and Business Analytics portfolio project.
+Ashek Alahi — Accounting, Finance, ERP Systems, and Business Analytics portfolio project.

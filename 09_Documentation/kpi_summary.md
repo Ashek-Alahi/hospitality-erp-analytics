@@ -2,8 +2,15 @@
 
 | kpi | value |
 | --- | --- |
-| Total net revenue | 4101460.45 |
-| Open AR balance | 200258.44 |
-| Operating profit | 2787531.71 |
-| Purchase spend | 695179.02 |
-| Reorder alerts | 0 |
+| Total net revenue | 12867010.04 |
+| Occupancy rate pct | 86.45 |
+| ADR | 126.0 |
+| RevPAR | 108.93 |
+| Collection rate pct | 82.38 |
+| Open AR balance | 1705443.94 |
+| Operating profit | 7327642.68 |
+| Operating profit margin pct | 56.95 |
+| Purchase spend | 1185479.52 |
+| Vendor delay rate pct | 49.17 |
+| Reorder alerts | 113 |
+| Best forecast baseline | linear trend forecast |

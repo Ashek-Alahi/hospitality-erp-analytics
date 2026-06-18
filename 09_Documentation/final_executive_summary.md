@@ -1,25 +1,28 @@
 # Final Executive Summary
 
-## Problem solved
-Hospitality managers often review revenue, receivables, cost control, procurement, inventory, and short-term planning in separate files or meetings. This prototype shows how SAP S/4HANA-inspired ERP data can be organized into one analytics workflow using synthetic/anonymized CSV data.
+Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
 
-## Evidence produced
-- FI outputs show monthly net revenue, cash collections, and accounts receivable aging.
-- CO outputs compare cost center budgets with actual spending and summarize operating profit.
-- SD outputs identify revenue by category, booking channel, and customer segment.
-- MM outputs summarize purchase spend, vendor delivery performance, and reorder alerts.
-- Forecasting outputs provide simple baseline revenue and cash collection views with clearly labeled limitations.
-- The HTML dashboard and KPI summary consolidate the cross-module evidence for review.
+## Portfolio positioning
+A SAP S/4HANA-inspired hospitality ERP analytics prototype using deterministic synthetic data, Python, SQL-ready CSVs, Markdown reporting, SVG charts, and an HTML dashboard.
 
-## Decisions management can make
-- Prioritize collection activity for overdue receivables.
-- Investigate cost centers with unfavorable variance.
-- Focus sales effort on stronger channels, services, and customer segments.
-- Review procurement categories and vendors that affect cost and supply continuity.
-- Use baseline forecast outputs as a conversation starter for planning, not as a production prediction.
+## Most important findings
+| kpi | value |
+| --- | --- |
+| Total net revenue | 12867010.04 |
+| Occupancy rate pct | 86.45 |
+| ADR | 126.0 |
+| RevPAR | 108.93 |
+| Collection rate pct | 82.38 |
+| Open AR balance | 1705443.94 |
+| Operating profit | 7327642.68 |
+| Operating profit margin pct | 56.95 |
+| Purchase spend | 1185479.52 |
+| Vendor delay rate pct | 49.17 |
+| Reorder alerts | 113 |
+| Best forecast baseline | linear trend forecast |
 
-## ERP and hospitality relevance
-The project is relevant because hotels and hospitality groups depend on connected finance, sales, procurement, and inventory processes. The repository demonstrates how ERP-style master data and transactions can feed business analytics without claiming to be a live SAP S/4HANA implementation.
+## Recommended actions
+Prioritize overdue AR follow-up, review unfavorable cost centers, protect high-performing direct and contract revenue channels, and mitigate vendor/inventory risks before service levels are affected.
 
-## Confidentiality statement
-All data is synthetic/anonymized and included in the repository. No non-public company records, SAP system exports, or confidential operational files are required.
+## Limitations
+Synthetic/anonymized data only; not a real SAP S/4HANA implementation and not production forecasting.

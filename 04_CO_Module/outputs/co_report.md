@@ -1,19 +1,25 @@
 # CO Analysis Report
 
-Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype.
+Synthetic/anonymized SAP S/4HANA-inspired hospitality ERP analytics prototype. This is not a real SAP implementation.
 
-## Budget vs actual
-| cost_center_id | cost_center_name | budget_amount | actual_amount | variance |
-| --- | --- | --- | --- | --- |
-| CC100 | Rooms Operations | 468000.0 | 469591.89 | 1591.89 |
-| CC200 | Food & Beverage | 294000.0 | 295000.04 | 1000.04 |
-| CC300 | Sales & Marketing | 174000.0 | 174591.86 | 591.86 |
-| CC400 | Facilities | 222000.0 | 230255.14 | 8255.14 |
-| CC500 | Administration | 144000.0 | 144489.81 | 489.81 |
+## Key findings
+Operating profit margin is 56.9%. Highest unfavorable variance: Food & Beverage at 4.6%.
 
-## Profitability
-| metric | amount |
-| --- | --- |
-| Net revenue | 4101460.45 |
-| Operating cost | 1313928.74 |
-| Operating profit | 2787531.71 |
+## Budget variance ranking
+| cost_center_id | cost_center_name | budget_amount | actual_amount | variance | variance_pct |
+| --- | --- | --- | --- | --- | --- |
+| CC200 | Food & Beverage | 1031184.0 | 1078481.93 | 47297.93 | 4.59 |
+| CC100 | Rooms | 1939608.0 | 1953070.07 | 13462.07 | 0.69 |
+| CC400 | Maintenance | 515592.0 | 525495.83 | 9903.83 | 1.92 |
+| CC300 | Housekeeping | 736560.0 | 739726.76 | 3166.76 | 0.43 |
+| CC500 | Sales & Marketing | 589248.0 | 586508.62 | -2739.38 | -0.46 |
+| CC600 | Administration | 662904.0 | 656084.15 | -6819.85 | -1.03 |
+
+## Management recommendations
+Review departments with positive variance first, especially operational areas affected by seasonality. Preserve under-budget controls only after confirming service quality was not reduced.
+
+## ERP/SAP relevance
+The analysis resembles CO cost center planning versus actual postings and profitability review.
+
+## Limitations
+No allocation cycles, internal orders, activity types, or product/customer profitability ledgers are modeled.
