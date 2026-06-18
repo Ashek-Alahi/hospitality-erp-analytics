@@ -1,0 +1,29 @@
+period,actual_cash_collected,forecast_cash_collected,record_type,method
+2024-02,103857.45,,actual,historical collections
+2024-03,296486.94,,actual,historical collections
+2024-04,287824.82,,actual,historical collections
+2024-05,293721.21,,actual,historical collections
+2024-06,145916.46,,actual,historical collections
+2024-07,435101.66,,actual,historical collections
+2024-08,515275.66,,actual,historical collections
+2024-09,379837.06,,actual,historical collections
+2024-10,234904.73,,actual,historical collections
+2024-11,484577.86,,actual,historical collections
+2024-12,306978.85,,actual,historical collections
+2025-01,498654.14,,actual,historical collections
+2025-02,327792.48,,actual,historical collections
+2025-03,239083.23,,actual,historical collections
+2025-04,273604.81,,actual,historical collections
+2025-05,333615.89,,actual,historical collections
+2025-06,410067.4,,actual,historical collections
+2025-07,447996.98,,actual,historical collections
+2025-08,374696.85,,actual,historical collections
+2025-09,437045.07,,actual,historical collections
+2025-10,204502.84,,actual,historical collections
+2025-11,299131.85,,actual,historical collections
+2025-12,292282.47,,actual,historical collections
+2026-01,249823.02,,actual,historical collections
+2026-02,100548.58,,actual,historical collections
+2026-03,,214218.02,forecast,three-month moving average
+2026-04,,188196.54,forecast,three-month moving average
+2026-05,,167654.38,forecast,three-month moving average

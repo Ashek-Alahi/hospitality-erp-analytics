@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.validate_data import BINARY_EXTENSIONS, REQUIRED_COLUMNS, find_binary_files
+from scripts.validate_data import BINARY_EXTENSIONS, REQUIRED_COLUMNS, find_binary_files, validate_data
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "02_Data" / "processed"
@@ -21,6 +21,7 @@ KEY_OUTPUTS = [
     ROOT / "06_MM_Module" / "outputs" / "mm_report.md",
     ROOT / "06_MM_Module" / "outputs" / "inventory_risk_summary.csv",
     ROOT / "07_Analytics_Forecasting" / "outputs" / "forecast_report.md",
+    ROOT / "07_Analytics_Forecasting" / "outputs" / "cash_collection_forecast.csv",
     ROOT / "08_BI_Integration" / "dashboard" / "index.html",
     ROOT / "09_Documentation" / "kpi_summary.csv",
     ROOT / "09_Documentation" / "kpi_summary.md",
@@ -109,3 +110,37 @@ def test_pipeline_does_not_generate_binary_files():
         if ".git" in path.parts or "__pycache__" in path.parts or ".pytest_cache" in path.parts:
             continue
         assert path.suffix.lower() not in BINARY_EXTENSIONS
+
+
+def test_validation_passes():
+    validate_data()
+
+
+def test_cash_collection_forecast_is_not_mislabeled():
+    old_path = ROOT / "07_Analytics_Forecasting" / "outputs" / "cash_flow_forecast.csv"
+    new_path = ROOT / "07_Analytics_Forecasting" / "outputs" / "cash_collection_forecast.csv"
+    assert not old_path.exists(), "Historical collections must not be mislabeled as cash flow forecast"
+    rows = read_rows(new_path)
+    assert {"period", "actual_cash_collected", "forecast_cash_collected", "record_type", "method"} <= set(rows[0])
+    assert any(row["record_type"] == "actual" for row in rows)
+    assert any(row["record_type"] == "forecast" and row["forecast_cash_collected"] for row in rows)
+
+
+def test_documentation_has_no_unfinished_cleanup_language():
+    blocked_phrases = [
+        "former binary image",
+        "retained as-is",
+        "should attach",
+        "future objective",
+        "placeholder",
+        "manual note",
+    ]
+    searchable_files = [
+        *ROOT.glob("*.md"),
+        *ROOT.glob("0*_*/**/*.md"),
+        ROOT / "08_BI_Integration" / "dashboard" / "index.html",
+    ]
+    for path in searchable_files:
+        text = path.read_text(encoding="utf-8").lower()
+        for phrase in blocked_phrases:
+            assert phrase not in text, f"{phrase!r} found in {path.relative_to(ROOT)}"
