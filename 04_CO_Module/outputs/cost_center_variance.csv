@@ -1,0 +1,6 @@
+cost_center_id,cost_center_name,budget_amount,actual_amount,variance
+CC100,Rooms Operations,468000.0,469591.89,1591.89
+CC200,Food & Beverage,294000.0,295000.04,1000.04
+CC300,Sales & Marketing,174000.0,174591.86,591.86
+CC400,Facilities,222000.0,230255.14,8255.14
+CC500,Administration,144000.0,144489.81,489.81

@@ -1,0 +1,6 @@
+vendor_id,vendor_name,purchase_amount,avg_delivery_delay_days,on_time_delivery_pct
+V001,Fresh Farm Cooperative,119780.8,0.92,98
+V002,Linen Logistics Japan,122272.13,1.08,94
+V003,Northern Utilities,136657.1,1.25,100
+V004,Amenity Supply Co,151042.02,1.0,91
+V005,Maintenance Partners,165426.97,0.75,88

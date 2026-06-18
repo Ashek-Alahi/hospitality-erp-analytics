@@ -1,0 +1,9 @@
+# KPI Summary
+
+| kpi | value |
+| --- | --- |
+| Total net revenue | 4101460.45 |
+| Open AR balance | 200258.44 |
+| Operating profit | 2787531.71 |
+| Purchase spend | 695179.02 |
+| Reorder alerts | 0 |

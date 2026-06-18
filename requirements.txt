@@ -1,0 +1,2 @@
+# No third-party packages are required.
+# The analytics pipeline uses only the Python standard library.
