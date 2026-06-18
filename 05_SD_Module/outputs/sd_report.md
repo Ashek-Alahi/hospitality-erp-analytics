@@ -31,7 +31,7 @@ Occupancy is 86.5%, ADR is 126.00, and RevPAR is 108.93.
 | Corporate | 1950937.79 |
 
 ## Business meaning
-Channel and segment mix should guide pricing, promotion timing, and direct-booking strategy. OTA volume should be balanced against margin and commission pressure.
+Channel and segment mix should guide pricing, promotion timing, and direct-booking strategy.
 
 ## ERP/SAP relevance
 This is SD-inspired order/billing analytics connected to customer master segments and revenue categories.

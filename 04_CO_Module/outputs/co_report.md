@@ -16,7 +16,7 @@ Operating profit margin is 56.9%. Highest unfavorable variance: Food & Beverage 
 | CC600 | Administration | 662904.0 | 656084.15 | -6819.85 | -1.03 |
 
 ## Management recommendations
-Review departments with positive variance first, especially operational areas affected by seasonality. Preserve under-budget controls only after confirming service quality was not reduced.
+Review departments with positive variance first and document corrective actions without reducing service quality.
 
 ## ERP/SAP relevance
 The analysis resembles CO cost center planning versus actual postings and profitability review.

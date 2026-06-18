@@ -1,0 +1,5 @@
+calculated_status_as_of,invoice_count,invoice_amount,paid_amount_as_of,outstanding_balance_as_of
+Cleared,93,5455522.0,5455522.0,0.0
+Partially Paid,77,3009476.55,2167434.71,842041.84
+Open - Not Yet Due,8,512414.25,0.0,512414.25
+Open - Overdue,14,701359.45,0.0,701359.45
