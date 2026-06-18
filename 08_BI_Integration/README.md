@@ -1,31 +1,21 @@
-# BI Integration Overview
+# BI Integration - Static Executive Dashboard
 
-## Business purpose
-Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
+This folder contains a static HTML dashboard that presents portfolio-grade KPI cards, module chart links, executive actions, invoice status, inventory risk, and forecast tables.
 
-## Business problem
-Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
+## Dashboard purpose
+The dashboard gives recruiters and interviewers a quick view of FI, CO, SD, MM, and forecasting outputs without requiring Power BI Desktop or a database server.
 
-## Input files
-Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
+## Included content
+- KPI cards
+- As-of date and scope note
+- Executive action register
+- Module report links
+- Invoice status summary
+- Inventory stock-gap risk summary
+- Revenue and cash forecast periods
 
-## Analysis logic
-The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+## Static HTML limitation
+The dashboard is generated as plain HTML with no external JavaScript libraries. It is easy to review in GitHub but is not an interactive BI application.
 
-## KPIs generated
-See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
-
-## Output files
-Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
-
-## ERP/SAP relevance
-The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
-
-## Management decisions supported
-The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
-
-## Limitations
-Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
-
-## Interview explanation
-Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.
+## Why no `.pbix` file is included
+Binary BI files are intentionally excluded to keep the repository text-based, auditable, and lightweight for GitHub review.

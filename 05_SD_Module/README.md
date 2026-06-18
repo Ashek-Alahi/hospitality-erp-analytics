@@ -1,31 +1,24 @@
-# SD Module Overview
+# SD Module - Hospitality Revenue Analytics
 
-## Business purpose
-Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
+This module models SAP S/4HANA-inspired sales and distribution analytics for hospitality commercial management. It summarizes revenue by category, sales channel, and customer segment.
 
-## Business problem
-Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
+## Analytics covered
+- Revenue categories: Rooms, Food & Beverage, Events, Other
+- Sales channels: Direct, OTA, Corporate Contract, Group Sales
+- Customer segments from customer master data
+- Occupancy rate
+- ADR
+- RevPAR
 
-## Input files
-Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
+## Business value
+Revenue managers can review channel mix, segment concentration, direct-booking opportunities, and hospitality operating KPIs.
 
-## Analysis logic
-The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
-
-## KPIs generated
-See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
-
-## Output files
-Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
-
-## ERP/SAP relevance
-The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
-
-## Management decisions supported
-The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+## Outputs generated
+- `outputs/revenue_by_category.csv`
+- `outputs/revenue_by_channel.csv`
+- `outputs/customer_segment_revenue.csv`
+- `outputs/hospitality_kpis.csv`
+- `outputs/sd_report.md`
 
 ## Limitations
-Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
-
-## Interview explanation
-Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.
+Synthetic data only; no reservation engine, cancellation logic, commissions, loyalty tiers, or daily room-type inventory is modeled.

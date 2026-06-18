@@ -1,31 +1,22 @@
-# MM Module Overview
+# MM Module - Procurement and Inventory Risk Analytics
 
-## Business purpose
-Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
+This module models SAP S/4HANA-inspired materials management analytics for procurement reliability and stockout control.
 
-## Business problem
-Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
+## Analytics covered
+- Purchase spend by category
+- Vendor delivery delay and on-time performance
+- Reorder alerts
+- Inventory risk summary using stock gap: `reorder_point - closing_stock`
 
-## Input files
-Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
+## Business value
+Procurement and inventory teams can identify delayed vendors, expedite items below reorder point, and prioritize categories with the largest stock gaps.
 
-## Analysis logic
-The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
-
-## KPIs generated
-See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
-
-## Output files
-Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
-
-## ERP/SAP relevance
-The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
-
-## Management decisions supported
-The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+## Outputs generated
+- `outputs/purchase_spend.csv`
+- `outputs/vendor_performance.csv`
+- `outputs/reorder_alerts.csv`
+- `outputs/inventory_risk_summary.csv`
+- `outputs/mm_report.md`
 
 ## Limitations
-Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
-
-## Interview explanation
-Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.
+Synthetic data only; no MRP run, safety-stock optimization, batch expiry, purchase-price variance accounting, or supplier contract workflow is modeled.

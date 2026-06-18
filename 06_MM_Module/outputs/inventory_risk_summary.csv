@@ -1,5 +1,5 @@
-category,closing_stock
-Food & Beverage,957.0
-Guest Supplies,330.0
-Housekeeping,292.0
-Maintenance,144.0
+category,alert_count,items_at_risk,lowest_closing_stock,average_stock_gap,max_stock_gap
+Food & Beverage,46,2,0.0,166.7,300.0
+Maintenance,24,1,0.0,39.0,45.0
+Guest Supplies,23,1,0.0,225.65,240.0
+Housekeeping,20,1,0.0,165.4,180.0

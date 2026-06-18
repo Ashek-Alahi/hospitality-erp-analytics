@@ -1,31 +1,23 @@
-# FI Module Overview
+# FI Module - Invoice-to-Cash Analytics
 
-## Business purpose
-Provide a concise, module-specific view of hospitality ERP analytics using deterministic synthetic data.
+This module models an SAP S/4HANA-inspired FI-AR invoice-to-cash scenario using synthetic hospitality invoices and payments. It covers invoices, payments, AR aging, collection rate, open AR, and recalculated invoice status.
 
-## Business problem
-Management needs decision-ready information rather than isolated transaction extracts. This module converts ERP-style CSV records into KPIs, exception outputs, and Markdown reports.
+## As-of-date logic
+FI receivables and collection KPIs are calculated as of 2025-12-31. Payments after this date are not counted as collected cash for the as-of-date position. Future-dated synthetic payments remain in the source data but are treated as later cash events.
 
-## Input files
-Inputs are generated under `02_Data/processed/` by `python run_all.py` and validated before reporting.
+## Invoice status logic
+Invoice status is calculated from paid amount as of 2025-12-31 and due date: Cleared, Partially Paid, Open - Not Yet Due, or Open - Overdue. The generated source `status` field is not used as the reporting status.
 
-## Analysis logic
-The pipeline applies transparent formulas in Python and writes text-based CSV, Markdown, SVG, or HTML outputs. Logic is intentionally auditable for portfolio review and interview defense.
+## Business value
+Credit control can focus on overdue exposure, partially paid accounts, and open AR rather than a misleading all-open status list.
 
-## KPIs generated
-See `09_Documentation/kpi_formula_catalog.md` for formulas, source files, ERP relevance, business meaning, decisions supported, and limitations.
-
-## Output files
-Module outputs are written to this folder's `outputs/` directory or, for BI integration, to `dashboard/index.html`.
-
-## ERP/SAP relevance
-The work is SAP S/4HANA-inspired and maps to FI, CO, SD, MM, and analytics concepts without claiming a real SAP implementation.
-
-## Management decisions supported
-The outputs support cash collection, cost control, commercial strategy, procurement follow-up, inventory replenishment, forecasting, and executive exception review.
+## Outputs generated
+- `outputs/ar_aging.csv`
+- `outputs/overdue_receivables_summary.csv`
+- `outputs/invoice_status_summary.csv`
+- `outputs/invoice_status_detail.csv`
+- `outputs/cash_collections.csv`
+- `outputs/fi_report.md`
 
 ## Limitations
-Synthetic/anonymized data only. No live SAP connection, direct SAP table extraction, production deployment, or confidential data is included.
-
-## Interview explanation
-Explain this module as a business analytics layer that translates ERP-style process data into management KPIs and action-oriented reporting. Emphasize honesty: it is a prototype, not a live SAP implementation.
+Synthetic data only; not a real SAP implementation. No tax, bank statement matching, lockbox, credit memo, or dispute workflow is modeled.

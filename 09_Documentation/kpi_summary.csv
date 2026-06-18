@@ -3,11 +3,14 @@ Total net revenue,12867010.04
 Occupancy rate pct,86.45
 ADR,126.0
 RevPAR,108.93
-Collection rate pct,82.38
-Open AR balance,1705443.94
+Collection rate pct as of 2025-12-31,78.76
+Open AR balance as of 2025-12-31,2055815.54
+Overdue AR exposure,1543401.29
 Operating profit,7327642.68
 Operating profit margin pct,56.95
 Purchase spend,1185479.52
 Vendor delay rate pct,49.17
 Reorder alerts,113
+Items at risk,5
+Max inventory stock gap,300.0
 Best forecast baseline,linear trend forecast

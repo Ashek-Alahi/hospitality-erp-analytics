@@ -14,6 +14,7 @@ KEY_OUTPUTS = [
     ROOT / "03_FI_Module" / "outputs" / "fi_report.md",
     ROOT / "03_FI_Module" / "outputs" / "ar_aging.csv",
     ROOT / "03_FI_Module" / "outputs" / "overdue_receivables_summary.csv",
+    ROOT / "03_FI_Module" / "outputs" / "invoice_status_summary.csv",
     ROOT / "04_CO_Module" / "outputs" / "co_report.md",
     ROOT / "04_CO_Module" / "outputs" / "cost_center_variance.csv",
     ROOT / "05_SD_Module" / "outputs" / "sd_report.md",
@@ -38,8 +39,9 @@ EXPECTED_KPIS = {
     "Occupancy rate pct",
     "ADR",
     "RevPAR",
-    "Collection rate pct",
-    "Open AR balance",
+    "Collection rate pct as of 2025-12-31",
+    "Open AR balance as of 2025-12-31",
+    "Overdue AR exposure",
     "Operating profit",
     "Operating profit margin pct",
     "Purchase spend",
@@ -154,9 +156,10 @@ def test_documentation_has_no_draft_cleanup_language():
 def test_core_calculation_formulas_are_correct():
     invoices = read_rows(ROOT / "02_Data" / "processed" / "customer_invoices_clean.csv")
     payments = read_rows(ROOT / "02_Data" / "processed" / "customer_payments_clean.csv")
-    expected_collection_rate = round(sum(float(r["payment_amount"]) for r in payments) / sum(float(r["invoice_amount"]) for r in invoices) * 100, 2)
+    as_of = "2025-12-31"
+    expected_collection_rate = round(sum(float(r["payment_amount"]) for r in payments if r["payment_date"] <= as_of) / sum(float(r["invoice_amount"]) for r in invoices if r["invoice_date"] <= as_of) * 100, 2)
     kpis = {row["kpi"]: row["value"] for row in read_rows(ROOT / "09_Documentation" / "kpi_summary.csv")}
-    assert float(kpis["Collection rate pct"]) == expected_collection_rate
+    assert float(kpis["Collection rate pct as of 2025-12-31"]) == expected_collection_rate
 
     ar_rows = read_rows(ROOT / "03_FI_Module" / "outputs" / "ar_aging.csv")
     assert {"Current", "1-30", "31-60", "61-90", "90+"} == {row["aging_bucket"] for row in ar_rows}
@@ -180,6 +183,34 @@ def test_mm_rules_and_forecast_metric_outputs():
 
     metrics = read_rows(ROOT / "07_Analytics_Forecasting" / "outputs" / "forecast_metrics.csv")
     assert all(row["mape_pct"] and row["mae"] for row in metrics)
+
+
+def test_as_of_date_invoice_status_and_forecast_outputs():
+    as_of = "2025-12-31"
+    invoice_status = read_rows(ROOT / "03_FI_Module" / "outputs" / "invoice_status_summary.csv")
+    statuses = {row["calculated_status_as_of"] for row in invoice_status}
+    assert {"Cleared", "Partially Paid"} <= statuses
+    assert any(status.startswith("Open -") for status in statuses)
+
+    inventory_risk = read_rows(ROOT / "06_MM_Module" / "outputs" / "inventory_risk_summary.csv")
+    assert {"alert_count", "items_at_risk", "average_stock_gap", "max_stock_gap"} <= set(inventory_risk[0])
+
+    revenue_forecast = read_rows(ROOT / "07_Analytics_Forecasting" / "outputs" / "revenue_forecast.csv")
+    assert {"period", "actual_net_revenue", "forecast_net_revenue", "record_type", "method"} <= set(revenue_forecast[0])
+    assert {"actual", "holdout", "forecast"} <= {row["record_type"] for row in revenue_forecast}
+
+    cash_rows = read_rows(ROOT / "07_Analytics_Forecasting" / "outputs" / "cash_collection_forecast.csv")
+    assert all(row["period"] <= as_of[:7] for row in cash_rows if row["record_type"] == "actual")
+
+    readmes = [ROOT / path for path in ["03_FI_Module/README.md", "04_CO_Module/README.md", "05_SD_Module/README.md", "06_MM_Module/README.md", "07_Analytics_Forecasting/README.md", "08_BI_Integration/README.md"]]
+    texts = [path.read_text(encoding="utf-8") for path in readmes]
+    assert len(set(texts)) == len(texts)
+
+    catalog = (ROOT / "09_Documentation" / "kpi_formula_catalog.md").read_text(encoding="utf-8")
+    for phrase in ["As-of-date collection rate", "Invoice status count", "Inventory stock gap", "Revenue forecast future periods"]:
+        assert phrase in catalog
+    dashboard = (ROOT / "08_BI_Integration" / "dashboard" / "index.html").read_text(encoding="utf-8")
+    assert "Invoice status summary" in dashboard and "Inventory risk summary using stock gap" in dashboard
 
 
 def test_new_portfolio_documentation_exists_and_is_reviewable():

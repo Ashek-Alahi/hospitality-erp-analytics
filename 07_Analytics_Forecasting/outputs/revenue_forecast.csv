@@ -1,25 +1,82 @@
-period,net_revenue,naive_forecast,moving_average_forecast,linear_trend_forecast,recommended_baseline
-2024-01,354571.89,354571.89,354571.89,354571.89,linear trend forecast
-2024-02,373811.04,354571.89,354571.89,365779.98,linear trend forecast
-2024-03,426629.72,373811.04,364191.46,376988.07,linear trend forecast
-2024-04,435419.61,426629.72,385004.22,388196.16,linear trend forecast
-2024-05,416454.99,435419.61,411953.46,399404.25,linear trend forecast
-2024-06,588585.54,416454.99,426168.11,410612.34,linear trend forecast
-2024-07,662443.97,588585.54,480153.38,421820.43,linear trend forecast
-2024-08,667062.25,662443.97,555828.17,433028.52,linear trend forecast
-2024-09,496716.21,667062.25,639363.92,444236.61,linear trend forecast
-2024-10,523196.66,496716.21,608740.81,455444.7,linear trend forecast
-2024-11,483175.72,523196.66,562325.04,466652.79,linear trend forecast
-2024-12,661787.14,483175.72,501029.53,477860.89,linear trend forecast
-2025-01,401513.53,661787.14,556053.17,489068.98,linear trend forecast
-2025-02,410773.94,401513.53,515492.13,500277.07,linear trend forecast
-2025-03,497502.7,410773.94,491358.2,511485.16,linear trend forecast
-2025-04,485032.05,497502.7,436596.72,522693.25,linear trend forecast
-2025-05,505382.42,485032.05,464436.23,533901.34,linear trend forecast
-2025-06,667978.79,505382.42,495972.39,545109.43,linear trend forecast
-2025-07,720850.5,667978.79,552797.75,556317.52,linear trend forecast
-2025-08,687983.27,720850.5,631403.9,567525.61,linear trend forecast
-2025-09,578733.7,687983.27,692270.85,578733.7,linear trend forecast
-2025-10,593110.19,578733.7,662522.49,589941.79,linear trend forecast
-2025-11,521323.48,593110.19,619942.39,601149.88,linear trend forecast
-2025-12,706970.73,521323.48,564389.12,612357.97,linear trend forecast
+period,actual_net_revenue,forecast_net_revenue,record_type,method
+2024-01,354571.89,,actual,naive forecast
+2024-02,373811.04,,actual,naive forecast
+2024-03,426629.72,,actual,naive forecast
+2024-04,435419.61,,actual,naive forecast
+2024-05,416454.99,,actual,naive forecast
+2024-06,588585.54,,actual,naive forecast
+2024-07,662443.97,,actual,naive forecast
+2024-08,667062.25,,actual,naive forecast
+2024-09,496716.21,,actual,naive forecast
+2024-10,523196.66,,actual,naive forecast
+2024-11,483175.72,,actual,naive forecast
+2024-12,661787.14,,actual,naive forecast
+2025-01,401513.53,,actual,naive forecast
+2025-02,410773.94,,actual,naive forecast
+2025-03,497502.7,,actual,naive forecast
+2025-04,485032.05,,actual,naive forecast
+2025-05,505382.42,,actual,naive forecast
+2025-06,667978.79,,actual,naive forecast
+2025-07,720850.5,,actual,naive forecast
+2025-08,687983.27,,actual,naive forecast
+2025-09,578733.7,,actual,naive forecast
+2025-10,593110.19,578733.7,holdout,naive forecast
+2025-11,521323.48,593110.19,holdout,naive forecast
+2025-12,706970.73,521323.48,holdout,naive forecast
+2024-01,354571.89,,actual,moving average forecast
+2024-02,373811.04,,actual,moving average forecast
+2024-03,426629.72,,actual,moving average forecast
+2024-04,435419.61,,actual,moving average forecast
+2024-05,416454.99,,actual,moving average forecast
+2024-06,588585.54,,actual,moving average forecast
+2024-07,662443.97,,actual,moving average forecast
+2024-08,667062.25,,actual,moving average forecast
+2024-09,496716.21,,actual,moving average forecast
+2024-10,523196.66,,actual,moving average forecast
+2024-11,483175.72,,actual,moving average forecast
+2024-12,661787.14,,actual,moving average forecast
+2025-01,401513.53,,actual,moving average forecast
+2025-02,410773.94,,actual,moving average forecast
+2025-03,497502.7,,actual,moving average forecast
+2025-04,485032.05,,actual,moving average forecast
+2025-05,505382.42,,actual,moving average forecast
+2025-06,667978.79,,actual,moving average forecast
+2025-07,720850.5,,actual,moving average forecast
+2025-08,687983.27,,actual,moving average forecast
+2025-09,578733.7,,actual,moving average forecast
+2025-10,593110.19,662522.49,holdout,moving average forecast
+2025-11,521323.48,619942.39,holdout,moving average forecast
+2025-12,706970.73,564389.12,holdout,moving average forecast
+2024-01,354571.89,,actual,linear trend forecast
+2024-02,373811.04,,actual,linear trend forecast
+2024-03,426629.72,,actual,linear trend forecast
+2024-04,435419.61,,actual,linear trend forecast
+2024-05,416454.99,,actual,linear trend forecast
+2024-06,588585.54,,actual,linear trend forecast
+2024-07,662443.97,,actual,linear trend forecast
+2024-08,667062.25,,actual,linear trend forecast
+2024-09,496716.21,,actual,linear trend forecast
+2024-10,523196.66,,actual,linear trend forecast
+2024-11,483175.72,,actual,linear trend forecast
+2024-12,661787.14,,actual,linear trend forecast
+2025-01,401513.53,,actual,linear trend forecast
+2025-02,410773.94,,actual,linear trend forecast
+2025-03,497502.7,,actual,linear trend forecast
+2025-04,485032.05,,actual,linear trend forecast
+2025-05,505382.42,,actual,linear trend forecast
+2025-06,667978.79,,actual,linear trend forecast
+2025-07,720850.5,,actual,linear trend forecast
+2025-08,687983.27,,actual,linear trend forecast
+2025-09,578733.7,,actual,linear trend forecast
+2025-10,593110.19,589941.79,holdout,linear trend forecast
+2025-11,521323.48,601149.88,holdout,linear trend forecast
+2025-12,706970.73,612357.97,holdout,linear trend forecast
+2026-01,,706970.73,forecast,naive forecast
+2026-02,,706970.73,forecast,naive forecast
+2026-03,,706970.73,forecast,naive forecast
+2026-01,,607134.8,forecast,moving average forecast
+2026-02,,611809.67,forecast,moving average forecast
+2026-03,,641971.73,forecast,moving average forecast
+2026-01,,623566.06,forecast,linear trend forecast
+2026-02,,634774.15,forecast,linear trend forecast
+2026-03,,645982.24,forecast,linear trend forecast
