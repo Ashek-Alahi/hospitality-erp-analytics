@@ -75,6 +75,3 @@ pytest
 - No live SAP connection, direct SAP table extraction, production deployment, or confidential data.
 - Forecasting is not production-grade forecasting.
 - No binary BI files are included; the dashboard is static HTML with text/SVG outputs.
-
-## Interview positioning
-Position this as an ERP analytics portfolio project: it proves you can connect business processes, accounting/ERP logic, Python automation, SQL-ready data, tests, and executive communication. Do not present it as an SAP implementation or live client project.
